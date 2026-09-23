@@ -1,84 +1,122 @@
 # Machina Development Progress
 
-## Phase 1 — End-to-End Prototype
+---
 
+## Slice 1 — Core Proof of Concept
 **Status:** ✅ Complete
 
-### Goal
-
-Build the first working vertical slice from ML prediction
-to maintenance decision and frontend visualization.
-
-### Completed
-
-- [x] Created project structure
-- [x] Created Python ML service
-- [x] Trained initial Random Forest model
-- [x] Added `/predict` endpoint
-- [x] Added `/explain` endpoint using SHAP
-- [x] Created Java Decision Engine
-- [x] Added Strategy pattern
-- [x] Connected Python output to Java using temporary JSON bridge
-- [x] Created React frontend
-- [x] Displayed machine health
-- [x] Displayed failure probability
-- [x] Displayed sensor data
-- [x] Displayed SHAP explanations
-- [x] Displayed maintenance decision
-
-### Current Flow
-
-Sensor Data
-→ Python ML
-→ Health Score
-→ Java Decision Engine
-→ Maintenance Decision
-→ React Dashboard
-
-### Limitations
-
-- Synthetic dataset
-- Temporary JSON bridge
-- React currently uses mock data
-- Java is not yet an HTTP service
-- Health-score formula is provisional
-- Decision thresholds are demonstration rules
-- No database
-- No RAG
+- [x] Synthetic sensor input
+- [x] Python Random Forest prediction
+- [x] Failure probability
+- [x] Health score
+- [x] SHAP explanation
+- [x] Java decision engine
+- [x] React dashboard
+- [x] Temporary JSON bridge / mock frontend data
 
 ---
 
-## Phase 2 — Real Service Integration
+## Slice 2 — Real Service Integration
+**Status:** ⏳ Next
 
-**Status:** ⏳ Not started
-
-### Goal
-
-Replace the temporary connections with actual APIs.
-
-### Planned
-
-- [ ] Connect React to Python API
-- [ ] Create Java HTTP API
-- [ ] Connect Python → Java through HTTP
-- [ ] Connect Java → frontend/gateway
+- [ ] Express/Node gateway
+- [ ] React → Gateway
+- [ ] Gateway → Python ML
+- [ ] Python → Java
+- [ ] Java → Gateway
+- [ ] MongoDB persistence
+- [ ] Replace React mock data
 - [ ] Remove temporary JSON bridge
-- [ ] Remove frontend mock data
+- [ ] API error handling
 
 ---
 
-## Phase 3 — Real Dataset
+## Slice 3 — Real Industrial Intelligence
+**Status:** ⏳ Planned
 
-**Status:** ⏳ Not started
-
-### Planned
-
-- [ ] NASA IMS dataset
-- [ ] Data preprocessing
-- [ ] Feature engineering
+- [ ] NASA IMS Bearing Dataset
+- [ ] Time-series preprocessing
+- [ ] Feature extraction/engineering
+- [ ] Train ML model
 - [ ] Model evaluation
-- [ ] Replace synthetic model
+- [ ] Failure prediction
+- [ ] SHAP explanations
+- [ ] Reconnect the improved model to the existing pipeline
 
 ---
 
-## Phase 4 — ...
+## Slice 4 — Decision Engine Maturity
+**Status:** ⏳ Planned
+
+- [ ] Java 17 Maven project
+- [ ] REST API
+- [ ] Strategy Pattern
+- [ ] Factory Pattern where actually needed
+- [ ] Singleton/rules management if justified
+- [ ] Observer-based alerts
+- [ ] Asset-specific decision rules
+- [ ] Finalize `MONITOR / REPAIR / REPLACE`
+- [ ] Input validation and edge cases
+
+---
+
+## Slice 5 — Production Dashboard
+**Status:** ⏳ Planned
+
+- [ ] Live API data
+- [ ] Asset status
+- [ ] Sensor trend charts
+- [ ] Failure probability visualization
+- [ ] SHAP explanation view
+- [ ] Decision output
+- [ ] Loading/error states
+- [ ] Asset selection
+- [ ] Historical predictions
+- [ ] Responsive UI
+- [ ] Recharts
+- [ ] Final visual polish
+
+---
+
+## Slice 6 — Persistence & Historical Intelligence
+**Status:** ⏳ Planned
+
+- [ ] Store incoming sensor data
+- [ ] Store predictions
+- [ ] Store SHAP results where appropriate
+- [ ] Store decisions
+- [ ] Retrieve historical data
+- [ ] Display historical trends
+- [ ] Link predictions to assets/time
+
+---
+
+## Slice 7 — MVP Integration & Deployment
+**Status:** ⏳ Planned
+
+- [ ] Full end-to-end integration testing
+- [ ] API validation
+- [ ] Failure handling
+- [ ] Service health checks
+- [ ] Configuration/environment variables
+- [ ] Security basics
+- [ ] Performance/latency checks
+- [ ] Deployment
+- [ ] Production documentation
+- [ ] Demo scenario
+
+---
+
+## Future Slice — RAG Knowledge Assistant
+**Status:** 🚫 Post-launch
+
+- [ ] Maintenance manuals
+- [ ] SOPs
+- [ ] Historical maintenance logs
+- [ ] Document chunking
+- [ ] Sentence Transformers
+- [ ] ChromaDB
+- [ ] Groq/LLM
+- [ ] Retrieval pipeline
+- [ ] Grounded maintenance instructions
+- [ ] Safety precautions / tools / procedures

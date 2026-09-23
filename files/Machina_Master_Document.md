@@ -115,4 +115,4 @@ Once RAG is added, a decision like "REPLACE BEARING" can be followed by a synthe
 ## 6. Related Documents
 
 - **Implementation Specification** — technical architecture, component breakdown, and OOP design patterns.
-- **Phase Execution Roadmap** — phased delivery plan targeting the October 31 MVP, with RAG as a post-launch phase.
+- **Vertical Slice Roadmap** — slice-based delivery plan targeting the October 31 MVP, with RAG as a post-launch phase.

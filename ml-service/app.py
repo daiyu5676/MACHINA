@@ -52,11 +52,12 @@ def predict(data: SensorData):
     # Convert probability into a health score
     health_score = round((1 - failure_probability) * 100)
 
-    return {
-        "failure_probability": round(float(failure_probability), 4),
-        "health_score": health_score
-    }
+    result = {
+    "failure_probability": round(float(failure_probability), 4),
+    "health_score": health_score
+}
 
+    return result
 #Explanation
 @app.post("/explain")
 def explain(data: SensorData):

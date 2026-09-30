@@ -75,13 +75,13 @@ Java:    REPLACE
 | Failure prediction (Random Forest) | ✅ MVP |
 | SHAP explainability | ✅ MVP |
 | Health score | ✅ MVP |
-| Rule-based maintenance decision (Java) | ✅ MVP |
-| Repair / Replace / Monitor | ✅ MVP |
-| Java OOP architecture (Strategy, Factory, Observer, Singleton) | ✅ MVP |
-| MongoDB persistence (historical sensor data & decisions) | ✅ MVP |
+| Rule-based maintenance decision (Java) | ⏳ Next Slice (Spring Boot deferred) |
+| Repair / Replace / Monitor | ⏳ Next Slice |
+| Java OOP architecture (Strategy, Factory, Observer, Singleton) | ✅ Core built |
+| MongoDB persistence (historical sensor data & decisions) | ⏳ Parallel / pending integration |
 | React dashboard + sensor trend graphs | ✅ MVP |
 | Express API gateway | ✅ MVP |
-| End-to-end integration | ✅ MVP |
+| End-to-end integration | ⏳ Ongoing |
 | RAG / ChromaDB / manual ingestion / Groq repair assistant | 🔜 Planned (post-MVP) |
 
 ---

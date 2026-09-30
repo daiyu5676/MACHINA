@@ -16,7 +16,7 @@ function App() {
     failureProbability: null,
     healthScore: null,
 
-    // SHAP output - still placeholder for now
+    // SHAP output
     explanation: {
       temperature: 0,
       vibration: 0,
@@ -32,20 +32,24 @@ function App() {
   const [error, setError] = useState(null);
 
 
-  // --------------------------------
-  // CALL ML /predict
-  // --------------------------------
+  // ==================================================
+  // LOAD ML PREDICTION + SHAP EXPLANATION
+  // ==================================================
 
   useEffect(() => {
 
-    const predictMachine = async () => {
+    const loadMachineData = async () => {
 
       setLoading(true);
       setError(null);
 
       try {
 
-        const response = await fetch(
+        // ==================================================
+        // 1. GET ML PREDICTION
+        // ==================================================
+
+        const predictionResponse = await fetch(
           "http://localhost:3000/api/predict",
           {
             method: "POST",
@@ -64,23 +68,73 @@ function App() {
         );
 
 
-        if (!response.ok) {
+        if (!predictionResponse.ok) {
           throw new Error("Prediction request failed");
         }
 
 
-        const data = await response.json();
+        const predictionData =
+          await predictionResponse.json();
 
 
-        // Update React state with the REAL ML result
+        // ==================================================
+        // 2. GET SHAP EXPLANATION
+        // ==================================================
+
+        const explainResponse = await fetch(
+          "http://localhost:3000/api/explain",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+              temperature: machine.temperature,
+              vibration: machine.vibration,
+              rpm: machine.rpm,
+              load: machine.load
+            })
+          }
+        );
+
+
+        if (!explainResponse.ok) {
+          throw new Error("Explanation request failed");
+        }
+
+
+        const explainData =
+          await explainResponse.json();
+
+
+        // ==================================================
+        // 3. UPDATE REACT STATE
+        // ==================================================
+
         setMachine(prev => ({
           ...prev,
 
           failureProbability:
-            data.failure_probability,
+            predictionData.failure_probability,
 
           healthScore:
-            data.health_score
+            predictionData.health_score,
+
+          explanation: {
+            temperature:
+              explainData.features.temperature,
+
+            vibration:
+              explainData.features.vibration,
+
+            rpm:
+              explainData.features.rpm,
+
+            load:
+              explainData.features.load
+          }
         }));
 
 
@@ -99,67 +153,9 @@ function App() {
     };
 
 
-    predictMachine();
+    loadMachineData();
 
   }, []);
-
-  useEffect(() => {
-
-  const explainMachine = async () => {
-
-    try {
-
-      const response = await fetch(
-        "http://localhost:3000/api/explain",
-        {
-          method: "POST",
-
-          headers: {
-            "Content-Type": "application/json"
-          },
-
-          body: JSON.stringify({
-            temperature: machine.temperature,
-            vibration: machine.vibration,
-            rpm: machine.rpm,
-            load: machine.load
-          })
-        }
-      );
-
-
-      if (!response.ok) {
-        throw new Error("Explanation request failed");
-      }
-
-
-      const data = await response.json();
-
-
-      setMachine(prev => ({
-        ...prev,
-
-        explanation: {
-          temperature: data.features.temperature,
-          vibration: data.features.vibration,
-          rpm: data.features.rpm,
-          load: data.features.load
-        }
-      }));
-
-
-    } catch (err) {
-
-      console.error(err);
-
-    }
-
-  };
-
-
-  explainMachine();
-
-}, []);
 
 
   return (

@@ -3,6 +3,7 @@
 ---
 
 ## Slice 1 — Core Proof of Concept
+
 **Status:** ✅ Complete
 
 - [x] Synthetic sensor input
@@ -17,6 +18,7 @@
 ---
 
 ## Slice 2 — Real Service Integration
+
 **Status:** ⏳ Next
 
 - [ ] Express/Node gateway
@@ -32,6 +34,7 @@
 ---
 
 ## Slice 3 — Real Industrial Intelligence
+
 **Status:** ⏳ Planned
 
 - [ ] NASA IMS Bearing Dataset
@@ -46,6 +49,7 @@
 ---
 
 ## Slice 4 — Decision Engine Maturity
+
 **Status:** ⏳ Planned
 
 - [ ] Java 17 Maven project
@@ -61,6 +65,7 @@
 ---
 
 ## Slice 5 — Production Dashboard
+
 **Status:** ⏳ Planned
 
 - [ ] Live API data
@@ -79,6 +84,7 @@
 ---
 
 ## Slice 6 — Persistence & Historical Intelligence
+
 **Status:** ⏳ Planned
 
 - [ ] Store incoming sensor data
@@ -92,6 +98,7 @@
 ---
 
 ## Slice 7 — MVP Integration & Deployment
+
 **Status:** ⏳ Planned
 
 - [ ] Full end-to-end integration testing
@@ -108,6 +115,7 @@
 ---
 
 ## Future Slice — RAG Knowledge Assistant
+
 **Status:** 🚫 Post-launch
 
 - [ ] Maintenance manuals

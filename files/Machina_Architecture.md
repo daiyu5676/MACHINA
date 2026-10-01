@@ -188,6 +188,6 @@ Sensor → ML → SHAP → Java → Decision → MongoDB → React
 | Frontend | React.js, Tailwind CSS, Recharts |
 | Gateway | Node.js, Express.js |
 | ML Service | Python, Pandas, NumPy, Scikit-learn, SHAP |
-| Decision Engine | Java 17+, Maven |
-| Database | MongoDB |
+| Decision Engine | Java 17+, Maven (Spring Boot deferred) |
+| Database | MongoDB (Parallel / pending integration) |
 | *(Future)* RAG | ChromaDB, Sentence Transformers, Groq API (Llama 3.3 / DeepSeek) |

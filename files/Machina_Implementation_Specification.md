@@ -53,8 +53,8 @@ The Express Gateway sits between the frontend and every backend service, so the 
 | **Frontend UI** | React.js, Tailwind CSS, Recharts | Renders asset status cards, sensor trend charts, failure probability, SHAP explanation bars, and the final Java decision. |
 | **Gateway API** | Node.js, Express.js | Orchestrates HTTP routing, client authentication, and inter-service communication between the ML and Java engines. |
 | **ML Service** | Python, Pandas, NumPy, Scikit-learn, SHAP | Trains/serves the Random Forest MVP failure-prediction model and computes SHAP feature-importance values for transparency. |
-| **Decision Engine** | Java 17+, Maven | Executes deterministic business rules, converts the health score into a REPAIR / REPLACE / MONITOR decision using strict OOP design patterns. |
-| **Database** | MongoDB | Stores assets, sensor logs, predictions, and decisions — providing historical sensor and decision tracking. |
+| **Decision Engine** | Java 17+, Maven | Executes deterministic business rules, converts the health score into a REPAIR / REPLACE / MONITOR decision using strict OOP design patterns. (Spring Boot REST layer deferred until Java decision integration is required.) |
+| **Database** | MongoDB | Stores assets, sensor logs, predictions, and decisions — providing historical sensor and decision tracking. (Parallel / pending integration) |
 
 ---
 

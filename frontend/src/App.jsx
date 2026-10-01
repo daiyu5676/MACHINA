@@ -246,8 +246,8 @@ function App() {
                 ? "..."
                 : machine.failureProbability !== null
                   ? `${Math.round(
-                      machine.failureProbability * 100
-                    )}%`
+                    machine.failureProbability * 100
+                  )}%`
                   : "--"
               }
 

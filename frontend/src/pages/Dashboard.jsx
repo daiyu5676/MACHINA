@@ -166,7 +166,7 @@ function Dashboard() {
         <div className="sensor-grid">
           <SensorCard label="Temperature" value={selectedAsset.temperature} unit="°C" change={4.2} />
           <SensorCard label="Vibration" value={selectedAsset.vibration} unit="" change={8.1} />
-          <SensorCard label="Pressure" value={selectedAsset.load} unit="%" change={0.3} />
+          <SensorCard label="Load" value={selectedAsset.load} unit="%" change={0.3} />
           <SensorCard label="RPM" value={selectedAsset.rpm} unit="" change={-1.2} />
         </div>
       </div>

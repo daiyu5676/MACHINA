@@ -15,12 +15,15 @@ with open("model.pkl", "rb") as file:
 explainer = shap.TreeExplainer(model)    
 
 
+from typing import Optional
+
 # Define the sensor data we expect
 class SensorData(BaseModel):
     temperature: float
     vibration: float
     rpm: float
     load: float
+    asset_id: Optional[str] = None
 
 
 # Health check

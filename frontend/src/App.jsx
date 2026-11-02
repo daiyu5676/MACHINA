@@ -6,16 +6,15 @@ import Assets from "./pages/Assets";
 import Predictions from "./pages/Predictions";
 import Insights from "./pages/Insights";
 import History from "./pages/History";
-import "./App.css";
 
 function App() {
   return (
     <BrowserRouter>
-      <div className="app">
+      <div className="flex flex-col min-h-screen bg-[#F5F6F7]">
         <Header />
-        <div className="app-body">
+        <div className="flex flex-1 overflow-hidden">
           <Sidebar />
-          <div className="main-content">
+          <main className="flex-1 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 md:px-9 md:py-7 max-h-[calc(100vh-52px)]">
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/assets" element={<Assets />} />
@@ -23,7 +22,7 @@ function App() {
               <Route path="/insights" element={<Insights />} />
               <Route path="/history" element={<History />} />
             </Routes>
-          </div>
+          </main>
         </div>
       </div>
     </BrowserRouter>

@@ -1,8 +1,3 @@
-/*
-  AssetSelector — dropdown to pick an asset for the dashboard.
-  Shows asset ID, name, and last analysis time.
-*/
-
 function AssetSelector({ assets, selectedId, onSelect }) {
   const selected = assets.find(a => a.id === selectedId);
 
@@ -16,11 +11,13 @@ function AssetSelector({ assets, selectedId, onSelect }) {
   };
 
   return (
-    <div className="asset-selector">
-      <div className="asset-selector-left">
-        <span className="asset-selector-label">ASSET</span>
+    <div className="flex justify-between items-center bg-white border border-[#CDD2D6] rounded-[6px] px-[18px] py-3 mb-5 max-md:flex-col max-md:items-start max-md:gap-2.5">
+      <div className="flex items-center gap-[14px]">
+        <span className="text-[10px] font-semibold tracking-[0.12em] text-[#60727D] uppercase">
+          ASSET
+        </span>
         <select
-          className="asset-selector-dropdown"
+          className="bg-[#F5F6F7] border border-[#CDD2D6] rounded text-[#17191B] px-3 py-1.5 text-[13px] font-medium cursor-pointer outline-none focus:border-[#315D72]"
           value={selectedId}
           onChange={(e) => onSelect(e.target.value)}
         >
@@ -33,8 +30,8 @@ function AssetSelector({ assets, selectedId, onSelect }) {
       </div>
 
       {selected && (
-        <div className="asset-selector-right">
-          <span className="asset-selector-meta">
+        <div>
+          <span className="text-xs text-[#7B858C] font-mono font-normal tracking-[-0.01em]">
             Last Analysis {formatTime(selected.lastAnalysis)}
           </span>
         </div>

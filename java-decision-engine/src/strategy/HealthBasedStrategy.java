@@ -1,17 +1,11 @@
 package strategy;
 
-public class HealthBasedStrategy implements DecisionStrategy {
+/**
+ * HealthBasedStrategy - Default strategy maintaining backwards compatibility
+ */
+public class HealthBasedStrategy extends StandardScoringStrategy {
 
-    @Override
-    public String decide(int healthScore) {
-
-        if (healthScore > 75)
-            return "MONITOR";
-
-        else if (healthScore >= 40)
-            return "REPAIR";
-
-        else
-            return "REPLACE";
+    public HealthBasedStrategy() {
+        super();
     }
 }

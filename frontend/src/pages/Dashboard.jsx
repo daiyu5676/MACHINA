@@ -7,18 +7,6 @@ import HealthChart from "../components/HealthChart";
 import DecisionCard from "../components/DecisionCard";
 import ExplainabilityPanel from "../components/ExplainabilityPanel";
 
-/*
-  Dashboard page — the main view.
-  
-  This preserves the original App.jsx functionality:
-  - Calls /api/predict and /api/explain on the gateway
-  - Falls back to mock data if the gateway is unavailable
-  - Displays health score, failure risk, sensors, SHAP, and decision
-  
-  All the original sensor fields are preserved:
-  temperature, vibration, rpm, load
-*/
-
 function getStatusFromHealth(score) {
   if (score >= 70) return "healthy";
   if (score >= 40) return "attention";
@@ -26,15 +14,16 @@ function getStatusFromHealth(score) {
 }
 
 function getStatusLabel(score) {
-  if (score >= 70) return "Healthy";
-  if (score >= 40) return "Attention";
+  if (score >= 70) return "Optimal";
+  if (score >= 40) return "Warning";
   return "Critical";
 }
 
 function getRiskLabel(prob) {
-  if (prob < 0.15) return "Low Risk";
-  if (prob < 0.40) return "Moderate Risk";
-  return "High Risk";
+  if (prob >= 0.70) return "Critical";
+  if (prob >= 0.40) return "Elevated";
+  if (prob >= 0.15) return "Moderate";
+  return "Nominal";
 }
 
 function Dashboard() {
@@ -45,14 +34,12 @@ function Dashboard() {
 
   const selectedAsset = mockAssets.find(a => a.id === selectedAssetId) || mockAssets[0];
 
-  // Try to call the real API, fall back to mock data
   useEffect(() => {
     const fetchPrediction = async () => {
       setLoading(true);
       setError(null);
 
       try {
-        // Send sensor data to gateway — same API call as original App.jsx
         const response = await fetch("http://localhost:3000/api/predict", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -68,7 +55,6 @@ function Dashboard() {
 
         const predData = await response.json();
 
-        // Also try to get SHAP explanation
         let explainData = null;
         try {
           const explainRes = await fetch("http://localhost:3000/api/explain", {
@@ -85,7 +71,7 @@ function Dashboard() {
             explainData = await explainRes.json();
           }
         } catch {
-          // Explanation is optional — fallback to mock
+          // Explanation is optional
         }
 
         setLiveData({
@@ -95,7 +81,6 @@ function Dashboard() {
         });
 
       } catch {
-        // Gateway unavailable — use mock data (this is expected behavior)
         setLiveData(null);
         setError("Gateway offline — showing mock data");
       } finally {
@@ -106,7 +91,6 @@ function Dashboard() {
     fetchPrediction();
   }, [selectedAssetId, selectedAsset.temperature, selectedAsset.vibration, selectedAsset.rpm, selectedAsset.load]);
 
-  // Merge live data with mock data (live takes priority)
   const healthScore = liveData?.healthScore ?? selectedAsset.healthScore;
   const failureProbability = liveData?.failureProbability ?? selectedAsset.failureProbability;
   const explanation = liveData?.explanation ?? selectedAsset.explanation;
@@ -115,8 +99,7 @@ function Dashboard() {
   const trendData = healthTrends[selectedAssetId] || [];
 
   return (
-    <div className="page">
-
+    <div className="max-w-[1200px]">
       <AssetSelector
         assets={mockAssets}
         selectedId={selectedAssetId}
@@ -124,14 +107,18 @@ function Dashboard() {
       />
 
       {error && (
-        <div className="error-banner">
+        <div className="bg-[#A87532]/10 border border-[#A87532]/20 rounded px-4 py-[9px] text-[13px] text-[#A87532] mb-5 flex items-center gap-2">
           <span>⚠</span> {error}
         </div>
       )}
 
-      {/* Metric cards row */}
-      <div className="section-label"><span className="section-number">01</span> Asset Condition</div>
-      <div className="metrics-grid">
+      {/* Section 01 */}
+      <div className="text-[11px] font-semibold tracking-[0.12em] uppercase text-[#60727D] mb-3.5 pb-2.5 border-b border-[#E2E6E9] flex items-center gap-2">
+        <span className="text-[#7B858C] font-mono text-[10px]">01</span> Asset Condition
+      </div>
+
+      {/* Metrics Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[#CDD2D6] border border-[#CDD2D6] rounded-[6px] overflow-hidden mb-5">
         <MetricCard
           title="Asset Health"
           value={loading ? "..." : `${healthScore} / 100`}
@@ -157,27 +144,30 @@ function Dashboard() {
         />
       </div>
 
-      {/* Health chart */}
+      {/* Health Chart */}
       <HealthChart data={trendData} title="Asset Health Trend — 24h" />
 
-      {/* Sensor readings */}
-      <div className="panel">
-        <div className="section-label"><span className="section-number">02</span> Sensor Readings</div>
-        <div className="sensor-grid">
+      {/* Section 02 */}
+      <div className="bg-white border border-[#CDD2D6] rounded-[6px] p-5 mb-5">
+        <div className="text-[11px] font-semibold tracking-[0.12em] uppercase text-[#60727D] mb-3.5 pb-2.5 border-b border-[#E2E6E9] flex items-center gap-2">
+          <span className="text-[#7B858C] font-mono text-[10px]">02</span> Sensor Readings
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[#E2E6E9] border border-[#E2E6E9] rounded overflow-hidden">
           <SensorCard label="Temperature" value={selectedAsset.temperature} unit="°C" change={4.2} />
           <SensorCard label="Vibration" value={selectedAsset.vibration} unit="" change={8.1} />
-          <SensorCard label="Pressure" value={selectedAsset.load} unit="%" change={0.3} />
+          <SensorCard label="Load" value={selectedAsset.load} unit="%" change={0.3} />
           <SensorCard label="RPM" value={selectedAsset.rpm} unit="" change={-1.2} />
         </div>
       </div>
 
-      {/* Bottom row: Decision + Explainability side by side */}
-      <div className="section-label"><span className="section-number">03</span> Analysis</div>
-      <div className="dashboard-bottom">
+      {/* Section 03 */}
+      <div className="text-[11px] font-semibold tracking-[0.12em] uppercase text-[#60727D] mb-3.5 pb-2.5 border-b border-[#E2E6E9] flex items-center gap-2">
+        <span className="text-[#7B858C] font-mono text-[10px]">03</span> Analysis
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5 mb-5">
         <DecisionCard decision={decision} />
         <ExplainabilityPanel explanation={explanation} />
       </div>
-
     </div>
   );
 }

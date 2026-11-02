@@ -10,6 +10,25 @@
 
 export const assets = [
   {
+    id: "ENGINE-185",
+    name: "Engine 185",
+    type: "Engine",
+    temperature: 82,
+    vibration: 0.84,
+    rpm: 1800,
+    load: 72,
+    failureProbability: 0.8,
+    healthScore: 30,
+    decision: "REPLACE",
+    explanation: {
+      vibration: 0.285,
+      temperature: 0.195,
+      load: 0.122,
+      rpm: 0.068
+    },
+    lastAnalysis: "2026-09-30T18:42:00"
+  },
+  {
     id: "BEARING-A01",
     name: "Bearing Unit A-01",
     type: "Bearing",

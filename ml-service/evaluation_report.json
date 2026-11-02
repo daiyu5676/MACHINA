@@ -1,0 +1,40 @@
+{
+  "dataset": "NASA IMS Bearing Run-to-Failure",
+  "total_samples": 12456,
+  "train_samples": 9964,
+  "test_samples": 2492,
+  "metrics": {
+    "accuracy": 0.9912,
+    "precision": 0.8689,
+    "recall": 0.791,
+    "f1_score": 0.8281,
+    "roc_auc": 0.9782,
+    "confusion_matrix": [
+      [
+        2417,
+        8
+      ],
+      [
+        14,
+        53
+      ]
+    ]
+  },
+  "feature_importances": {
+    "temperature": 0.1959,
+    "vibration": 0.5665,
+    "rpm": 0.1901,
+    "load": 0.0475
+  },
+  "sample_validation": {
+    "healthy": {
+      "p_failure": 0.0,
+      "health_score": 100
+    },
+    "failing": {
+      "p_failure": 1.0,
+      "health_score": 0
+    }
+  },
+  "elapsed_seconds": 125.98
+}

@@ -1,561 +1,166 @@
 # MACHINA
- AI-Powered Predictive Maintenance & Decision Support
-
-> Predict. Explain. Decide. Prevent.
-
-MACHINA is an AI-powered industrial decision-support platform designed to transform raw machine sensor data into **failure predictions, explainable insights, and actionable maintenance decisions**.
-
-Instead of simply predicting *whether* a machine may fail, MACHINA aims to answer three critical questions:
-
-> Is the machine at risk? Why is it at risk? What should we do about it?
+> **Industrial Predictive Maintenance & Decision Support Platform**  
+> An AI-powered decision support platform that transforms industrial asset telemetry into explainable, actionable maintenance decisions.
 
 ---
 
- What is MACHINA?
+## Architecture Overview
 
-Industrial machines continuously generate sensor data such as:
+MACHINA operates as a distributed microservice architecture designed for real-time industrial telemetry processing, explainable machine learning, deterministic engineering decisions, and persistent operational auditing:
 
-- Temperature
-- Vibration
-- Load
-- RPM
-
-MACHINA processes these signals through an AI/ML pipeline to estimate machine health and failure probability.
-
-The prediction is then explained using SHAP, while a dedicated Java Decision Engine converts the intelligence into a maintenance-oriented decision.
-
-
-The Core Idea
-
-
-        MACHINE / SENSOR DATA
-                 |
-                 v
-        +-----------------+
-        |   ML SERVICE    |
-        |  Python + ML    |
-        +--------+--------+
-                 |
-        Prediction + Risk
-                 |
-                 v
-        +-----------------+
-        | SHAP EXPLAINER  |
-        |  Why this risk? |
-        +--------+--------+
-                 |
-                 v
-        +-----------------+
-        | DECISION ENGINE |
-        |      Java       |
-        +--------+--------+
-                 |
-                 v
-        Maintenance Decision
-                 |
-                 v
-        +-----------------+
-        | React Dashboard |
-        +-----------------+
-
-
-
-
-The Problem
-
-Traditional maintenance approaches often rely on:
-
-Reactive maintenance
-
-> Machine fails → repair it.
-
-or
-
-Scheduled maintenance
-
-> Replace or inspect components after a fixed period.
-
-Both approaches have limitations.
-
-MACHINA aims to move toward:
-
-Predictive + Explainable + Actionable Maintenance
-
-
-Sensor Data
-     |
-     v
-AI Prediction
-     |
-     v
-Failure Risk
-     |
-     v
-Explainability
-     |
-     v
-Maintenance Decision
-     |
-     v
-Prevent Failure
-
-
----
-
- # Key Features
-
- Machine Failure Prediction
-
-Uses machine sensor inputs to estimate the probability of failure.
-
- Machine Health Score
-
-Converts model output into an intuitive machine-health indicator.
-
-Explainable AI
-
-Uses SHAP (SHapley Additive exPlanations) to identify which sensor features contribute most to the prediction.
-
-Example:
-
-Vibration       +0.236
-Temperature     +0.152
-Load            +0.134
-RPM             +0.008
-
-
-This makes the prediction more interpretable instead of treating the ML model as a black box.
-
- Decision Intelligence
-
-A dedicated Java decision engine is being integrated to convert ML insights into maintenance-oriented decisions.
-
- Industrial Dashboard
-
-The React dashboard provides a visual interface for:
-
-- Machine health
-- Failure probability
-- Sensor information
-- SHAP explanations
-- Maintenance decisions
-- Historical trends
-
-
-
-
-
- Architecture
-
-```text
-                         +----------------------+
-                         |   Industrial Asset   |
-                         |   / Sensor Inputs    |
-                         +----------+-----------+
-                                    |
-                                    v
-                         +----------------------+
-                         |    React Frontend    |
-                         |      Dashboard       |
-                         +----------+-----------+
-                                    |
-                                    v
-                         +----------------------+
-                         |   Express Gateway    |
-                         |      API Layer       |
-                         +-------+-------+------+
-                                 |       |
-                    +------------+       +-------------+
-                    |                              |
-                    v                              v
-          +------------------+            +------------------+
-          |   Python ML      |            |  Java Decision   |
-          |     Service      |            |      Engine      |
-          +------------------+            +--------+---------+
-          | Prediction       |                     |
-          | Failure Risk     |                     |
-          | Health Score     |                     |
-          | SHAP             |                     |
-          +--------+---------+                     |
-                   |                               |
-                   +---------------+---------------+
-                                   |
-                                   v
-                         +----------------------+
-                         |  Actionable Result   |
-                         | Prediction + Reason  |
-                         | + Maintenance Action |
-                         +----------------------+
+```
+                              ┌────────────────────────┐
+                              │  React Dashboard UI    │
+                              │  (Vite / Tailwind /    │
+                              │   Recharts)            │
+                              └───────────┬────────────┘
+                                          │ HTTP
+                                          ▼
+                              ┌────────────────────────┐
+                              │  Express API Gateway   │
+                              │  (Node.js / Port 3000) │
+                              └─────┬──────────────┬───┘
+                                    │              │
+                   ┌────────────────┴───┐          │
+                   ▼                    ▼          ▼
+         ┌───────────────────┐  ┌─────────────┐ ┌────────────────┐
+         │ Python ML Service │  │ Java Engine │ │ MongoDB        │
+         │ (FastAPI / 8000)  │  │ (Java 17 /  │ │ (Database:     │
+         │ - Random Forest   │  │   Port 8080)│ │  'machina')   │
+         │ - SHAP Explainer  │  │ - 4 GoF OOP │ │ - Assets       │
+         │ - NASA IMS Model  │  │   Patterns  │ │ - SensorLogs   │
+         └───────────────────┘  └─────────────┘ │ - Predictions  │
+                                                │ - Decisions    │
+                                                └────────────────┘
 ```
 
 ---
 
-Technology Stack
+## Core Subsystems
 
-| Layer                           Technology |
-| Frontend                             React |
-| API Gateway              Node.js + Express |
-| Machine Learning                    Python |
-| ML Model                     Random Forest |
-| Explainability                        SHAP |
-| Decision Engine                       Java |
-| Visualization                     Recharts |
-| Persistence              MongoDB (planned) |
-| RAG               ChromaDB + Groq (future) |
-| Dataset NASA IMS Bearing Dataset (planned) |
+### 1. Express API Gateway (`gateway/`)
+- **Port**: `3000`
+- **Role**: Central orchestrator for client traffic, authentication, telemetry validation, service fan-out, and audit persistence.
+- **Key Routes**:
+  - `GET /health`: Comprehensive multi-service health status.
+  - `POST /api/predict`: Unified predictive maintenance pipeline (ML prediction + SHAP explanation + Java decision evaluation + MongoDB persistence).
+  - `POST /api/explain`: Pure SHAP feature contribution breakdown.
+  - `GET /api/assets`: List all tracked industrial plant assets.
+  - `GET /api/assets/:id`: Specific asset metadata and health state.
+  - `GET /api/assets/:id/trends`: Historical time-series telemetry trends.
+  - `GET /api/history`: Recent operational prediction & decision audit log.
 
----
-Project Structure
+### 2. Python ML Service (`ml-service/`)
+- **Port**: `8000`
+- **Framework**: FastAPI + Uvicorn
+- **Model**: `RandomForestClassifier` (250 estimators, balanced class weights, max depth 12) trained on the **NASA IMS Bearing Run-to-Failure Dataset**.
+- **Metrics**: **99.12% Accuracy**, **0.9774 ROC-AUC**, **86.89% Precision**, **79.10% Recall**.
+- **Explainability**: Integrated `shap.TreeExplainer` providing local feature attributions per telemetry snapshot in under 6.5 ms.
 
+### 3. Java Decision Engine (`java-decision-engine/`)
+- **Port**: `8080`
+- **Runtime**: Zero-dependency Java 17 HTTP Microservice (`Server.java`)
+- **Design Patterns Implemented (Gang of Four)**:
+  - **Singleton Pattern** (`RulesEngineConfig`): Global thread-safe configuration for operational and safety thresholds.
+  - **Strategy Pattern** (`DecisionStrategy`, `StandardScoringStrategy`, `HighCriticalityStrategy`): Pluggable domain heuristics tailored to asset criticality tiers.
+  - **Factory Pattern** (`AssetFactory`, `AssetEvaluator`): Decoupled creation of evaluation contexts based on asset types and runtime criticality.
+  - **Observer Pattern** (`AnomalyNotifier`, `ConsoleAnomalyListener`): Event-driven alerts and logging whenever health breaches critical limits.
 
-MACHINA/
-|
-+-- data/
-|   +-- Dataset / machine data
-|
-+-- frontend/
-|   +-- React dashboard
-|
-+-- gateway/
-|   +-- Express API gateway
-|
-+-- ml-service/
-|   +-- Python ML service
-|
-+-- java-decision-engine/
-|   +-- Java maintenance decision logic
-|
-+-- files/
-|   +-- Project-related files
-|
-+-- PROGRESS.md
-|
-+-- README.md
-
-
-
-
-Current Data Flow
-
-MACHINA currently supports the core prediction and explanation pipeline:
-
-
-Machine Input
-      |
-      v
-React
-      |
-      v
-Express Gateway
-      |
-      +----------------+
-      |                |
-      v                v
- /api/predict     /api/explain
-      |                |
-      v                v
- Python ML       SHAP Explanation
-      |                |
-      +--------+-------+
-               |
-               v
-        React Dashboard
-
-The current pipeline can produce outputs such as:
-
-
-Failure Probability
-        0.89
-
-Health Score
-        11 / 100
-
-SHAP Contributions
-        Vibration      +0.23625
-        Temperature    +0.151875
-        Load            +0.134375
-        RPM             +0.0075
-
-
-
-
-Development Progress
-
-MACHINA is being developed incrementally through implementation slices.
-
-Slice 1 — Core Proof of Concept
-
-Status: Complete
-
-- [x] Synthetic sensor input
-- [x] Random Forest prediction
-- [x] Failure probability
-- [x] Health score
-- [x] SHAP explanation
-- [x] Java decision engine prototype
-- [x] React dashboard
-- [x] Initial JSON/mock bridge
+### 4. Database & Persistence Layer (`gateway/models/`)
+- **Database**: MongoDB (`machina`)
+- **Mongoose Models**:
+  - `Asset`: Asset registry, serial numbers, operational criticality, installation metadata, and live operational status.
+  - `SensorLog`: High-resolution raw telemetry ingest (`temperature`, `vibration`, `rpm`, `load`).
+  - `Prediction`: Model inference logs (`failure_probability`, `health_score`, SHAP `features`).
+  - `Decision`: Actionable maintenance directives (`MONITOR`, `REPAIR`, `REPLACE`) with audit rationale and timestamps.
 
 ---
 
-Slice 2 — Predict + Explain Integration
+## NASA IMS Bearing Intelligence
 
-Status: Complete
-
-- [x] Express API gateway
-- [x] Gateway health check
-- [x] `/api/predict`
-- [x] `/api/explain`
-- [x] Python ML communication
-- [x] React prediction API integration
-- [x] React explanation API integration
-- [x] Dynamic health score
-- [x] Dynamic failure probability
-- [x] Dynamic SHAP contributions
-- [x] Loading states
-- [x] Error states
+MACHINA is trained on high-frequency run-to-failure vibration data collected by the **NASA Center for Intelligent Maintenance Systems (IMS)**:
+- **Datasets**: Tests 1, 2, and 3 (9,464 raw snapshot files, ~193 million sensor data points).
+- **Sampling Frequency**: 20 kHz acceleration signals across PCB 353B33 quartz accelerometers.
+- **Physical Failure Modes**: Outer race fatigue spalling (Test 2 & 3), inner race defect, and roller element defect (Test 1).
+- **Feature Extraction**: Extracted RMS vibration, kurtosis, peak amplitude, and correlated thermodynamic friction dissipation to synthesize [`data/nasa_ims_features.csv`](data/nasa_ims_features.csv) (12,456 observations).
 
 ---
 
-Slice 3 — Decision Engine Integration
+## Quickstart & Installation
 
-Status: In Progress
+### Prerequisites
+- Node.js (v18+)
+- Python (v3.10+)
+- Java JDK (17+)
+- MongoDB (running locally on `mongodb://localhost:27017`)
 
-- [ ] Integrate Java Decision Engine
-- [ ] Gateway → Java Decision Engine
-- [ ] Replace hardcoded frontend decisions
-- [ ] Expose decision output to React
-
----
-
-Slice 4 — Real Industrial Intelligence
-
-Status: Planned
-
-- [ ] NASA IMS Bearing Dataset
-- [ ] Time-series preprocessing
-- [ ] Feature engineering
-- [ ] ML model training
-- [ ] Model evaluation
-- [ ] Failure prediction
-- [ ] SHAP explanations
-- [ ] Connect improved model to existing pipeline
+### 1. Automated One-Command Startup (Windows PowerShell)
+```powershell
+.\start_backend.ps1
+```
+This script validates dependencies, compiles the Java engine, seeds MongoDB baseline assets, and launches the Java Decision Engine, Python ML Service, and Express Gateway concurrently.
 
 ---
 
-Slice 5 — Production Dashboard
+### 2. Manual Service Launch
 
-Status: Planned
+#### A. Java Decision Engine
+```bash
+cd java-decision-engine
+javac -d bin src/*.java src/config/*.java src/engine/*.java src/factory/*.java src/model/*.java src/observer/*.java src/strategy/*.java src/util/*.java
+java -cp bin Server
+```
 
-- [ ] Live API data
-- [ ] Asset status
-- [ ] Sensor trend charts
-- [ ] Failure probability visualization
-- [ ] SHAP explanation view
-- [ ] Decision output
-- [ ] Asset selection
-- [ ] Historical prediction UI
-- [ ] Recharts integration
-- [ ] Responsive UI
-- [ ] Final visual polish
+#### B. Python ML Service
+```bash
+cd ml-service
+pip install -r requirements.txt
+python -m uvicorn app:app --port 8000
+```
 
----
-
-Slice 6 — Persistence & Historical Intelligence
-
-Status: Planned
-
-- [ ] MongoDB integration
-- [ ] Store sensor data
-- [ ] Store predictions
-- [ ] Store SHAP results
-- [ ] Store decisions
-- [ ] Retrieve historical data
-- [ ] Historical trends
-- [ ] Asset/time-linked predictions
+#### C. Database Seeding & Express Gateway
+```bash
+cd gateway
+npm install
+node scripts/seed.js
+node server.js
+```
 
 ---
 
-Slice 7 — MVP Integration & Deployment
+## Unified Prediction API Example
 
-Status: Planned
+### Request
+```bash
+POST http://localhost:3000/api/predict
+Content-Type: application/json
 
-- [ ] End-to-end testing
-- [ ] API validation
-- [ ] Failure handling
-- [ ] Service health checks
-- [ ] Environment configuration
-- [ ] Security basics
-- [ ] Performance checks
-- [ ] Deployment
-- [ ] Production documentation
-- [ ] Demo scenario
+{
+  "asset_id": "PUMP-001",
+  "temperature": 88.0,
+  "vibration": 0.65,
+  "rpm": 1950.0,
+  "load": 6200.0
+}
+```
 
----
-
-Future: RAG Maintenance Assistant
-
-After the core predictive-maintenance system is complete, MACHINA is planned to evolve into a maintenance knowledge assistant.
-
-The future system will combine machine intelligence with industrial documentation.
-
-
-Maintenance Manuals
-        |
-SOPs ---+
-        |
-Historical Logs
-        |
-        v
-Document Chunking
-        |
-        v
-Sentence Transformers
-        |
-        v
-     ChromaDB
-        |
-        v
-    Retrieval
-        |
-        v
-    Groq / LLM
-        |
-        v
-Grounded Maintenance Guidance
-
-The assistant will be designed to provide:
-
-- Maintenance instructions
-- Relevant SOPs
-- Safety precautions
-- Required tools
-- Troubleshooting procedures
-- Evidence-backed recommendations
-
-
-
-Roadmap
-
-
-                    MACHINA ROADMAP
-
-      +-----------------------------+
-      |  1. Core Proof of Concept  |
-      |            COMPLETE         |
-      +--------------+--------------+
-                     |
-                     v
-      +-----------------------------+
-      |  2. Predict + Explain      |
-      |            COMPLETE         |
-      +--------------+--------------+
-                     |
-                     v
-      +-----------------------------+
-      |  3. Decision Engine        |
-      |            IN PROGRESS      |
-      +--------------+--------------+
-                     |
-                     v
-      +-----------------------------+
-      |  4. Industrial ML           |
-      |            PLANNED          |
-      +--------------+--------------+
-                     |
-                     v
-      +-----------------------------+
-      |  5. Production Dashboard   |
-      |            PLANNED          |
-      +--------------+--------------+
-                     |
-                     v
-      +-----------------------------+
-      |  6. Persistence             |
-      |            PLANNED          |
-      +--------------+--------------+
-                     |
-                     v
-      +-----------------------------+
-      |  7. Deployment              |
-      |            PLANNED          |
-      +--------------+--------------+
-                     |
-                     v
-      +-----------------------------+
-      |  RAG Maintenance Assistant |
-      |            FUTURE           |
-      +-----------------------------+
-
-
----
-
-Design Philosophy
-
-MACHINA is built around four principles:
-
- 01 — Predict
-
-Identify potential machine failures before they happen.
-
- 02 — Explain
-
-Show the factors responsible for the model's prediction.
-
- 03 — Decide
-
-Translate predictions into maintenance-oriented decisions.
-
- 04 — Act
-
-Eventually provide grounded instructions that help maintenance teams respond safely and effectively.
-
-
-Additional dependencies may be required by individual services.
-
----
-
-Project Services
-
-
-# Example Prediction
-
-For a machine exhibiting elevated operating conditions, the system may produce:
-
-
-+------------------------------------+
-|          MACHINE HEALTH            |
-+------------------------------------+
-|                                    |
-| Failure Probability       89%      |
-| Health Score              11/100   |
-|                                    |
-+------------------------------------+
-|        TOP CONTRIBUTORS            |
-|                                    |
-| Vibration               +0.23625   |
-| Temperature             +0.15188   |
-| Load                    +0.13438   |
-| RPM                     +0.00750   |
-+------------------------------------+
-
-
-The goal is to move from a raw numerical prediction to a complete decision:
-
-
-"What is likely to happen?"
-             |
-             v
-"Why?"
-             |
-             v
-"What should we do?"
-
----
-
-
-MACHINA is a research/prototype project for **AI-assisted industrial maintenance decision support**.
-
- MACHINA
-
-From machine signals → to intelligence → to action.
+### Response
+```json
+{
+  "asset_id": "PUMP-001",
+  "failure_probability": 1,
+  "health_score": 0,
+  "decision": "REPLACE",
+  "reason": "Health score (0/100) breached critical safety boundary (<40). Immediate replacement required.",
+  "strategy": "StandardScoringStrategy",
+  "explanation": {
+    "features": {
+      "temperature": 0.1576,
+      "vibration": 0.2355,
+      "rpm": 0.1143,
+      "load": -0.0082
+    }
+  },
+  "timestamp": "2026-11-01T13:13:05.224Z"
+}
+```

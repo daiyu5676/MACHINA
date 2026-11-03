@@ -2,19 +2,16 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from "recharts";
 
-/*
-  HealthChart — shows asset health score over time.
-  Uses Recharts (the chart library mentioned in PROGRESS.md / Slice 5).
-*/
-
 function HealthChart({ data, title }) {
   if (!data || data.length === 0) return null;
 
   return (
-    <div className="health-chart">
-      <h3 className="health-chart-title">{title || "Asset Health Trend"}</h3>
+    <div className="bg-white border border-[#CDD2D6] rounded-[6px] p-5 mb-5">
+      <h3 className="font-heading text-[13px] font-semibold tracking-[0.04em] mb-4 text-[#25292C] m-0">
+        {title || "Asset Health Trend"}
+      </h3>
 
-      <div className="health-chart-container">
+      <div className="-ml-2.5">
         <ResponsiveContainer width="100%" height={240}>
           <LineChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#E2E6E9" />

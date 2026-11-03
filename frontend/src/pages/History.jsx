@@ -1,15 +1,10 @@
 import { useState } from "react";
 import { predictionHistory, assets } from "../data/mockData";
 
-/*
-  History page — timeline of prediction events.
-  Shows previous events in a clean timeline view.
-*/
-
 function getDecisionClass(decision) {
-  if (decision === "MONITOR") return "decision-badge--monitor";
-  if (decision === "REPAIR") return "decision-badge--attention";
-  return "decision-badge--danger";
+  if (decision === "MONITOR") return "bg-[#477A5A]/10 text-[#477A5A]";
+  if (decision === "REPAIR") return "bg-[#A87532]/10 text-[#A87532]";
+  return "bg-[#A94B4B]/10 text-[#A94B4B]";
 }
 
 function getTimelineColor(decision) {
@@ -43,7 +38,6 @@ function History() {
     new Date(b.time) - new Date(a.time)
   );
 
-  // Group by date
   const grouped = {};
   sorted.forEach(event => {
     const dateKey = formatDate(event.time);
@@ -52,15 +46,15 @@ function History() {
   });
 
   return (
-    <div className="page">
-      <div className="page-header">
+    <div className="max-w-[1200px]">
+      <div className="flex justify-between items-start mb-6 max-md:flex-col max-md:gap-3">
         <div>
-          <h2 className="page-title">History</h2>
-          <p className="page-subtitle">Prediction event timeline</p>
+          <h2 className="font-heading text-xl font-semibold mb-[3px] text-[#17191B] m-0">History</h2>
+          <p className="text-[13px] text-[#7B858C] m-0">Prediction event timeline</p>
         </div>
-        <div className="page-controls">
+        <div className="flex gap-2.5">
           <select
-            className="filter-select"
+            className="bg-white border border-[#CDD2D6] rounded text-[#17191B] px-3 py-1.5 text-[13px] font-sans font-medium cursor-pointer outline-none focus:border-[#315D72]"
             value={filterAsset}
             onChange={(e) => setFilterAsset(e.target.value)}
           >
@@ -72,34 +66,36 @@ function History() {
         </div>
       </div>
 
-      <div className="timeline">
+      <div className="flex flex-col gap-6">
         {Object.entries(grouped).map(([date, events]) => (
-          <div key={date} className="timeline-group">
-            <div className="timeline-date">{date}</div>
+          <div key={date}>
+            <div className="text-[11px] font-semibold tracking-[0.1em] text-[#60727D] uppercase mb-3 pb-2 border-b border-[#E2E6E9]">
+              {date}
+            </div>
 
             {events.map((event, i) => {
               const asset = assets.find(a => a.id === event.assetId);
               return (
-                <div key={`${event.assetId}-${event.time}-${i}`} className="timeline-item">
-                  <div className="timeline-marker">
+                <div key={`${event.assetId}-${event.time}-${i}`} className="flex gap-4 relative">
+                  <div className="flex flex-col items-center w-4 shrink-0 pt-1">
                     <span
-                      className="timeline-dot"
+                      className="w-2 h-2 rounded-full shrink-0"
                       style={{ background: getTimelineColor(event.decision) }}
                     ></span>
-                    {i < events.length - 1 && <span className="timeline-line"></span>}
+                    {i < events.length - 1 && <span className="w-[1px] flex-1 bg-[#D7DCE0] mt-1.5"></span>}
                   </div>
 
-                  <div className="timeline-content">
-                    <div className="timeline-content-header">
-                      <span className="timeline-time">{formatTime(event.time)}</span>
-                      <span className={`decision-badge decision-badge--small ${getDecisionClass(event.decision)}`}>
+                  <div className="bg-white border border-[#E2E6E9] rounded-[6px] px-4 py-3 flex-1 mb-2">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="font-mono text-[13px] font-semibold text-[#25292C]">{formatTime(event.time)}</span>
+                      <span className={`inline-block px-[7px] py-0.5 rounded text-[10px] font-semibold tracking-[0.08em] font-mono ${getDecisionClass(event.decision)}`}>
                         {event.decision}
                       </span>
                     </div>
-                    <p className="timeline-asset">{asset ? asset.name : event.assetId}</p>
-                    <div className="timeline-stats">
-                      <span>Health: <strong>{event.healthScore}</strong></span>
-                      <span>Risk: <strong>{(event.failureProbability * 100).toFixed(1)}%</strong></span>
+                    <p className="text-[13px] text-[#596168] mb-1">{asset ? asset.name : event.assetId}</p>
+                    <div className="flex gap-5 text-xs text-[#7B858C]">
+                      <span>Health: <strong className="font-mono text-[#25292C] font-semibold">{event.healthScore}</strong></span>
+                      <span>Risk: <strong className="font-mono text-[#25292C] font-semibold">{(event.failureProbability * 100).toFixed(1)}%</strong></span>
                     </div>
                   </div>
                 </div>

@@ -1,109 +1,171 @@
 import { useState } from "react";
-import { predictionHistory, assets } from "../data/mockData";
+import { useMachines } from "../context/useMachines";
+import { Link } from "react-router-dom";
+
+/*
+  History page — timeline of dynamic machine ingestion & prediction events.
+  Completely dynamic: Zero predefined assets.
+*/
 
 function getDecisionClass(decision) {
-  if (decision === "MONITOR") return "bg-[#477A5A]/10 text-[#477A5A]";
-  if (decision === "REPAIR") return "bg-[#A87532]/10 text-[#A87532]";
-  return "bg-[#A94B4B]/10 text-[#A94B4B]";
+  if (!decision || decision === "PENDING") return "decision-badge--small";
+  if (decision === "MONITOR") return "decision-badge--monitor";
+  if (decision === "REPAIR") return "decision-badge--attention";
+  return "decision-badge--danger";
 }
 
 function getTimelineColor(decision) {
   if (decision === "MONITOR") return "#477A5A";
   if (decision === "REPAIR") return "#A87532";
-  return "#A94B4B";
+  if (decision === "REPLACE") return "#A94B4B";
+  return "#60727D";
 }
 
 function formatTime(isoString) {
+  if (!isoString) return "--";
   const d = new Date(isoString);
+  if (isNaN(d.getTime())) return isoString;
   return d.toLocaleTimeString("en-GB", {
-    hour: "2-digit", minute: "2-digit"
+    hour: "2-digit",
+    minute: "2-digit"
   });
 }
 
 function formatDate(isoString) {
+  if (!isoString) return "--";
   const d = new Date(isoString);
+  if (isNaN(d.getTime())) return isoString;
   return d.toLocaleDateString("en-GB", {
-    day: "numeric", month: "short", year: "numeric"
+    day: "numeric",
+    month: "short",
+    year: "numeric"
   });
 }
 
 function History() {
+  const { machines } = useMachines();
   const [filterAsset, setFilterAsset] = useState("ALL");
 
-  const filtered = filterAsset === "ALL"
-    ? predictionHistory
-    : predictionHistory.filter(p => p.assetId === filterAsset);
-
-  const sorted = [...filtered].sort((a, b) =>
-    new Date(b.time) - new Date(a.time)
+  const events = machines.flatMap((m) =>
+    m.history.map((h) => ({
+      time: h.timestamp,
+      assetId: m.id,
+      assetName: m.name,
+      vibration: h.vibration,
+      temperature: h.temperature,
+      load: h.load,
+      rpm: h.rpm,
+      healthScore: m.analysis.healthScore !== null ? m.analysis.healthScore : "--",
+      failureProbability:
+        m.analysis.failureProbability !== null
+          ? `${(m.analysis.failureProbability * 100).toFixed(1)}%`
+          : "Pending",
+      decision: m.analysis.decision || "INGESTED"
+    }))
   );
 
+  const filtered =
+    filterAsset === "ALL"
+      ? events
+      : events.filter((p) => p.assetId === filterAsset);
+
+  const sorted = [...filtered].sort(
+    (a, b) => new Date(b.time) - new Date(a.time)
+  );
+
+  // Group by date
   const grouped = {};
-  sorted.forEach(event => {
+  sorted.forEach((event) => {
     const dateKey = formatDate(event.time);
     if (!grouped[dateKey]) grouped[dateKey] = [];
     grouped[dateKey].push(event);
   });
 
   return (
-    <div className="max-w-[1200px]">
-      <div className="flex justify-between items-start mb-6 max-md:flex-col max-md:gap-3">
+    <div className="page">
+      <div className="page-header">
         <div>
-          <h2 className="font-heading text-xl font-semibold mb-[3px] text-[#17191B] m-0">History</h2>
-          <p className="text-[13px] text-[#7B858C] m-0">Prediction event timeline</p>
+          <h2 className="page-title">Fleet Telemetry History</h2>
+          <p className="page-subtitle">Timeline of ingested telemetry and prediction events</p>
         </div>
-        <div className="flex gap-2.5">
-          <select
-            className="bg-white border border-[#CDD2D6] rounded text-[#17191B] px-3 py-1.5 text-[13px] font-sans font-medium cursor-pointer outline-none focus:border-[#315D72]"
-            value={filterAsset}
-            onChange={(e) => setFilterAsset(e.target.value)}
-          >
-            <option value="ALL">All Assets</option>
-            {assets.map(a => (
-              <option key={a.id} value={a.id}>{a.name}</option>
-            ))}
-          </select>
-        </div>
+
+        {machines.length > 0 && (
+          <div className="page-controls">
+            <select
+              className="filter-select"
+              value={filterAsset}
+              onChange={(e) => setFilterAsset(e.target.value)}
+            >
+              <option value="ALL">All Machines ({machines.length})</option>
+              {machines.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.id} — {m.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
-      <div className="flex flex-col gap-6">
-        {Object.entries(grouped).map(([date, events]) => (
-          <div key={date}>
-            <div className="text-[11px] font-semibold tracking-[0.1em] text-[#60727D] uppercase mb-3 pb-2 border-b border-[#E2E6E9]">
-              {date}
-            </div>
+      {machines.length === 0 ? (
+        <div className="table-container">
+          <div className="table-empty">
+            <p style={{ fontWeight: 600, fontSize: "14px", marginBottom: "6px", color: "var(--dark-gray)" }}>
+              No Telemetry History
+            </p>
+            <p style={{ marginBottom: "14px" }}>
+              All predefined assets have been removed. Ingest machine telemetry on the dashboard to build event history.
+            </p>
+            <Link to="/" className="btn btn-secondary">
+              Go to Dashboard
+            </Link>
+          </div>
+        </div>
+      ) : sorted.length === 0 ? (
+        <div className="table-container">
+          <div className="table-empty">
+            <p>No events found for the selected filter.</p>
+          </div>
+        </div>
+      ) : (
+        <div className="timeline">
+          {Object.entries(grouped).map(([date, dayEvents]) => (
+            <div key={date} className="timeline-group">
+              <div className="timeline-date">{date}</div>
 
-            {events.map((event, i) => {
-              const asset = assets.find(a => a.id === event.assetId);
-              return (
-                <div key={`${event.assetId}-${event.time}-${i}`} className="flex gap-4 relative">
-                  <div className="flex flex-col items-center w-4 shrink-0 pt-1">
+              {dayEvents.map((event, i) => (
+                <div key={`${event.assetId}-${event.time}-${i}`} className="timeline-item">
+                  <div className="timeline-marker">
                     <span
-                      className="w-2 h-2 rounded-full shrink-0"
+                      className="timeline-dot"
                       style={{ background: getTimelineColor(event.decision) }}
                     ></span>
-                    {i < events.length - 1 && <span className="w-[1px] flex-1 bg-[#D7DCE0] mt-1.5"></span>}
+                    {i < dayEvents.length - 1 && <span className="timeline-line"></span>}
                   </div>
 
-                  <div className="bg-white border border-[#E2E6E9] rounded-[6px] px-4 py-3 flex-1 mb-2">
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="font-mono text-[13px] font-semibold text-[#25292C]">{formatTime(event.time)}</span>
-                      <span className={`inline-block px-[7px] py-0.5 rounded text-[10px] font-semibold tracking-[0.08em] font-mono ${getDecisionClass(event.decision)}`}>
+                  <div className="timeline-content">
+                    <div className="timeline-content-header">
+                      <span className="timeline-time">{formatTime(event.time)}</span>
+                      <span className={`decision-badge decision-badge--small ${getDecisionClass(event.decision)}`}>
                         {event.decision}
                       </span>
                     </div>
-                    <p className="text-[13px] text-[#596168] mb-1">{asset ? asset.name : event.assetId}</p>
-                    <div className="flex gap-5 text-xs text-[#7B858C]">
-                      <span>Health: <strong className="font-mono text-[#25292C] font-semibold">{event.healthScore}</strong></span>
-                      <span>Risk: <strong className="font-mono text-[#25292C] font-semibold">{(event.failureProbability * 100).toFixed(1)}%</strong></span>
+                    <p className="timeline-asset">
+                      <strong>{event.assetId}</strong> — {event.assetName}
+                    </p>
+                    <div className="timeline-stats">
+                      <span>Vib: <strong>{event.vibration} mm/s</strong></span>
+                      <span>Temp: <strong>{event.temperature}°C</strong></span>
+                      <span>Load: <strong>{event.load}%</strong></span>
+                      <span>RPM: <strong>{event.rpm}</strong></span>
                     </div>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        ))}
-      </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

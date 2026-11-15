@@ -1,89 +1,150 @@
-import { assets } from "../data/mockData";
+import { useMachines } from "../context/useMachines";
+import { Link } from "react-router-dom";
+
+/*
+  Assets page — table showing all dynamically registered machines.
+  Completely dynamic: No predefined or hardcoded sample assets.
+*/
 
 function getStatusFromHealth(score) {
-  if (score >= 70) return { label: "Healthy", className: "bg-[#477A5A]/10 text-[#477A5A]" };
-  if (score >= 40) return { label: "Attention", className: "bg-[#A87532]/10 text-[#A87532]" };
-  return { label: "Critical", className: "bg-[#A94B4B]/10 text-[#A94B4B]" };
+  if (score === null || score === undefined) {
+    return { label: "Registered", className: "status-healthy" };
+  }
+  if (score >= 70) return { label: "Healthy", className: "status-healthy" };
+  if (score >= 40) return { label: "Attention", className: "status-attention" };
+  return { label: "Critical", className: "status-danger" };
 }
 
 function getDecisionClass(decision) {
-  if (decision === "MONITOR") return "bg-[#477A5A]/10 text-[#477A5A]";
-  if (decision === "REPAIR") return "bg-[#A87532]/10 text-[#A87532]";
-  return "bg-[#A94B4B]/10 text-[#A94B4B]";
+  if (!decision || decision === "PENDING") return "decision-badge--small";
+  if (decision === "MONITOR") return "decision-badge--monitor";
+  if (decision === "REPAIR") return "decision-badge--attention";
+  return "decision-badge--danger";
 }
 
 function formatTime(isoString) {
+  if (!isoString) return "--";
   const d = new Date(isoString);
-  return d.toLocaleDateString("en-GB", {
-    day: "numeric", month: "short", year: "numeric"
-  }) + " " + d.toLocaleTimeString("en-GB", {
-    hour: "2-digit", minute: "2-digit"
-  });
+  if (isNaN(d.getTime())) return isoString;
+  return (
+    d.toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric"
+    }) +
+    " " +
+    d.toLocaleTimeString("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit"
+    })
+  );
 }
 
 function Assets() {
+  const { machines, selectMachine } = useMachines();
+
   return (
-    <div className="max-w-[1200px]">
-      <div className="flex justify-between items-start mb-6 max-md:flex-col max-md:gap-3">
+    <div className="page">
+      <div className="page-header">
         <div>
-          <h2 className="font-heading text-xl font-semibold mb-[3px] text-[#17191B] m-0">Assets</h2>
-          <p className="text-[13px] text-[#7B858C] m-0">
-            {assets.length} monitored assets
+          <h2 className="page-title">Registered Fleet Assets</h2>
+          <p className="page-subtitle">
+            {machines.length} dynamically monitored {machines.length === 1 ? "machine" : "machines"}
           </p>
         </div>
+        <Link to="/" className="btn btn-primary">
+          + Ingest Telemetry
+        </Link>
       </div>
 
-      <div className="bg-white border border-[#CDD2D6] rounded-[6px] overflow-x-auto">
-        <table className="w-full border-collapse text-[13px]">
-          <thead>
-            <tr className="bg-[#ECEFF1] border-b border-[#CDD2D6]">
-              <th className="text-left px-4 py-[11px] text-[10px] font-semibold tracking-[0.1em] uppercase text-[#60727D] whitespace-nowrap">Asset</th>
-              <th className="text-left px-4 py-[11px] text-[10px] font-semibold tracking-[0.1em] uppercase text-[#60727D] whitespace-nowrap">Health</th>
-              <th className="text-left px-4 py-[11px] text-[10px] font-semibold tracking-[0.1em] uppercase text-[#60727D] whitespace-nowrap">Failure Risk</th>
-              <th className="text-left px-4 py-[11px] text-[10px] font-semibold tracking-[0.1em] uppercase text-[#60727D] whitespace-nowrap">Status</th>
-              <th className="text-left px-4 py-[11px] text-[10px] font-semibold tracking-[0.1em] uppercase text-[#60727D] whitespace-nowrap">Decision</th>
-              <th className="text-left px-4 py-[11px] text-[10px] font-semibold tracking-[0.1em] uppercase text-[#60727D] whitespace-nowrap">Last Analysis</th>
-            </tr>
-          </thead>
-          <tbody>
-            {assets.map(asset => {
-              const status = getStatusFromHealth(asset.healthScore);
-              return (
-                <tr key={asset.id} className="border-b border-[#E2E6E9] last:border-b-0 hover:bg-[#F0F2F4] transition-colors">
-                  <td className="px-4 py-[11px] text-[#25292C]">
-                    <div className="flex flex-col">
-                      <span className="font-medium text-[#17191B]">{asset.name}</span>
-                      <span className="font-mono text-[11px] text-[#7B858C] mt-[1px] tracking-[-0.01em]">{asset.id}</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-[11px] text-[#25292C]">
-                    <div className="flex items-center gap-2.5 font-mono text-[13px]">
-                      <div className="w-[60px] h-[3px] bg-[#D7DCE0] rounded-sm overflow-hidden">
-                        <div
-                          className="h-full bg-[#60727D] rounded-sm"
-                          style={{ width: `${asset.healthScore}%` }}
-                        ></div>
+      <div className="table-container">
+        {machines.length === 0 ? (
+          <div className="table-empty">
+            <p style={{ fontWeight: 600, fontSize: "14px", marginBottom: "6px", color: "var(--dark-gray)" }}>
+              No Assets Registered
+            </p>
+            <p style={{ marginBottom: "14px" }}>
+              All predefined assets have been removed. Use the Sensor Log Input module on the dashboard to register machines dynamically.
+            </p>
+            <Link to="/" className="btn btn-secondary">
+              Go to Sensor Log Input
+            </Link>
+          </div>
+        ) : (
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Machine Asset</th>
+                <th>Health Score</th>
+                <th>Failure Risk</th>
+                <th>Status</th>
+                <th>Decision</th>
+                <th>Last Ingestion</th>
+              </tr>
+            </thead>
+            <tbody>
+              {machines.map((m) => {
+                const isAnalyzed =
+                  m.analysis?.status === "COMPLETED" &&
+                  m.analysis?.healthScore !== null;
+                const status = getStatusFromHealth(
+                  isAnalyzed ? m.analysis.healthScore : null
+                );
+
+                return (
+                  <tr key={m.id}>
+                    <td>
+                      <div className="asset-cell">
+                        <Link
+                          to="/"
+                          onClick={() => selectMachine(m.id)}
+                          className="asset-cell-name"
+                          style={{ cursor: "pointer" }}
+                        >
+                          {m.name}
+                        </Link>
+                        <span className="asset-cell-id">{m.id}</span>
                       </div>
-                      <span>{asset.healthScore}</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-[11px] text-[#25292C]">{(asset.failureProbability * 100).toFixed(1)}%</td>
-                  <td className="px-4 py-[11px] text-[#25292C]">
-                    <span className={`inline-block px-2 py-0.5 rounded text-[11px] font-semibold tracking-[0.04em] ${status.className}`}>
-                      {status.label}
-                    </span>
-                  </td>
-                  <td className="px-4 py-[11px] text-[#25292C]">
-                    <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-semibold tracking-[0.08em] font-mono ${getDecisionClass(asset.decision)}`}>
-                      {asset.decision}
-                    </span>
-                  </td>
-                  <td className="px-4 py-[11px] text-[#7B858C] font-mono text-xs">{formatTime(asset.lastAnalysis)}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                    </td>
+                    <td>
+                      {isAnalyzed ? (
+                        <div className="health-cell">
+                          <div className="health-bar-small">
+                            <div
+                              className="health-bar-fill-small"
+                              style={{ width: `${m.analysis.healthScore}%` }}
+                            ></div>
+                          </div>
+                          <span>{m.analysis.healthScore}</span>
+                        </div>
+                      ) : (
+                        <span className="text-muted">Awaiting Analysis</span>
+                      )}
+                    </td>
+                    <td>
+                      {isAnalyzed ? (
+                        `${(m.analysis.failureProbability * 100).toFixed(1)}%`
+                      ) : (
+                        <span className="text-muted">Pending</span>
+                      )}
+                    </td>
+                    <td>
+                      <span className={`status-badge ${status.className}`}>
+                        {status.label}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={`decision-badge ${getDecisionClass(m.analysis.decision)}`}>
+                        {m.analysis.decision || "PENDING"}
+                      </span>
+                    </td>
+                    <td className="text-muted">{formatTime(m.lastUpdated)}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

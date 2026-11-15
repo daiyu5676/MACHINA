@@ -3,12 +3,12 @@ import { NavLink } from "react-router-dom";
 function Sidebar() {
   return (
     <nav className="w-[220px] bg-white border-r border-[#CDD2D6] flex flex-col justify-between shrink-0 max-h-[calc(100vh-52px)] overflow-y-auto hidden md:flex">
-      <div className="p-[14px_10px] flex flex-col gap-[1px]">
+      <div className="p-3.5 flex flex-col gap-2">
         <NavLink
           to="/"
           end
           className={({ isActive }) =>
-            `flex items-center gap-2.5 px-3 py-[9px] rounded text-[13px] font-medium transition-colors no-underline ${
+            `flex items-center gap-3 px-3.5 py-2.5 rounded-md text-[13px] font-medium transition-colors no-underline ${
               isActive
                 ? "bg-[#315D72]/10 text-[#315D72] font-semibold [&>svg]:opacity-90"
                 : "text-[#596168] hover:bg-[#ECEFF1] hover:text-[#25292C] [&>svg]:opacity-55"
@@ -27,7 +27,7 @@ function Sidebar() {
         <NavLink
           to="/assets"
           className={({ isActive }) =>
-            `flex items-center gap-2.5 px-3 py-[9px] rounded text-[13px] font-medium transition-colors no-underline ${
+            `flex items-center gap-3 px-3.5 py-2.5 rounded-md text-[13px] font-medium transition-colors no-underline ${
               isActive
                 ? "bg-[#315D72]/10 text-[#315D72] font-semibold [&>svg]:opacity-90"
                 : "text-[#596168] hover:bg-[#ECEFF1] hover:text-[#25292C] [&>svg]:opacity-55"
@@ -45,7 +45,7 @@ function Sidebar() {
         <NavLink
           to="/predictions"
           className={({ isActive }) =>
-            `flex items-center gap-2.5 px-3 py-[9px] rounded text-[13px] font-medium transition-colors no-underline ${
+            `flex items-center gap-3 px-3.5 py-2.5 rounded-md text-[13px] font-medium transition-colors no-underline ${
               isActive
                 ? "bg-[#315D72]/10 text-[#315D72] font-semibold [&>svg]:opacity-90"
                 : "text-[#596168] hover:bg-[#ECEFF1] hover:text-[#25292C] [&>svg]:opacity-55"
@@ -61,7 +61,7 @@ function Sidebar() {
         <NavLink
           to="/insights"
           className={({ isActive }) =>
-            `flex items-center gap-2.5 px-3 py-[9px] rounded text-[13px] font-medium transition-colors no-underline ${
+            `flex items-center gap-3 px-3.5 py-2.5 rounded-md text-[13px] font-medium transition-colors no-underline ${
               isActive
                 ? "bg-[#315D72]/10 text-[#315D72] font-semibold [&>svg]:opacity-90"
                 : "text-[#596168] hover:bg-[#ECEFF1] hover:text-[#25292C] [&>svg]:opacity-55"
@@ -78,7 +78,7 @@ function Sidebar() {
         <NavLink
           to="/history"
           className={({ isActive }) =>
-            `flex items-center gap-2.5 px-3 py-[9px] rounded text-[13px] font-medium transition-colors no-underline ${
+            `flex items-center gap-3 px-3.5 py-2.5 rounded-md text-[13px] font-medium transition-colors no-underline ${
               isActive
                 ? "bg-[#315D72]/10 text-[#315D72] font-semibold [&>svg]:opacity-90"
                 : "text-[#596168] hover:bg-[#ECEFF1] hover:text-[#25292C] [&>svg]:opacity-55"

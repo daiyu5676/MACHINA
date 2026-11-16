@@ -108,20 +108,22 @@ SHAP:
 
 ## Slice 5 — Production Dashboard
 
-**Status:** ⏳ Planned
+**Status:** ✅ Complete
 
-- [ ] Live API data
-- [ ] Asset status
-- [ ] Sensor trend charts
-- [ ] Failure probability visualization
-- [ ] SHAP explanation view
-- [ ] Decision output
-- [ ] Loading/error states
-- [ ] Asset selection
-- [ ] Historical predictions
-- [ ] Responsive UI
-- [ ] Recharts
-- [ ] Final visual polish
+- [x] Live API data
+- [x] Asset status
+- [x] Dynamic machine registration via sensor log ingestion
+- [x] Telemetry presets toolbar (Nominal, Elevated, Critical, Randomize)
+- [x] Sensor trend tables & history progression
+- [x] Failure probability visualization
+- [x] SHAP explanation view
+- [x] Real Java Decision Engine integration (GoF Strategy pattern & deterministic rationale)
+- [x] Loading and error states
+- [x] Dynamic fleet selection
+- [x] Historical predictions & timeline views
+- [x] Responsive industrial UI
+- [x] Recharts integration (Fleet health distribution & feature importance)
+- [x] Final visual polish
 
 ---
 

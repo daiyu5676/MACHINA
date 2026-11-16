@@ -49,10 +49,10 @@ function Assets() {
         <div>
           <h2 className="page-title">Registered Fleet Assets</h2>
           <p className="page-subtitle">
-            {machines.length} dynamically monitored {machines.length === 1 ? "machine" : "machines"}
+            {machines.length} registered {machines.length === 1 ? "machine" : "machines"}
           </p>
         </div>
-        <Link to="/" className="btn btn-primary">
+        <Link to="/" state={{ enterTelemetry: true }} className="btn btn-primary">
           + Ingest Telemetry
         </Link>
       </div>
@@ -66,7 +66,7 @@ function Assets() {
             <p style={{ marginBottom: "14px" }}>
               All predefined assets have been removed. Use the Sensor Log Input module on the dashboard to register machines dynamically.
             </p>
-            <Link to="/" className="btn btn-secondary">
+            <Link to="/" state={{ enterTelemetry: true }} className="btn btn-secondary">
               Go to Sensor Log Input
             </Link>
           </div>

@@ -57,7 +57,7 @@ Pop-Location
 
 # 2. Start Java Decision Engine
 Write-Host "[2/5] Starting Java Decision Engine on port 8080..." -ForegroundColor Yellow
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$PSScriptRoot\java-decision-engine'; Write-Host '--- JAVA DECISION ENGINE (Port 8080) ---' -ForegroundColor Cyan; & '$javaExe' -Djava.net.preferIPv4Stack=true -cp bin Server"
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$PSScriptRoot\java-decision-engine'; Write-Host '--- JAVA DECISION ENGINE (Port 8080) ---' -ForegroundColor Cyan; & '$javaExe' -cp bin Server"
 
 # 3. Start Python ML Service (FastAPI)
 $pythonExe = if (Test-Path "$PSScriptRoot\ml-service\venv\Scripts\python.exe") {

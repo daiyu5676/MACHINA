@@ -3,32 +3,32 @@
    White industrial engineering interface
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap');
 
 /* ---- Design Tokens ---- */
 :root {
-  --background: #F5F6F7;
-  --surface: #FFFFFF;
-  --surface-secondary: #ECEFF1;
-  --surface-hover: #F0F2F4;
+  --background: #E5E7EB;
+  --surface: #FAF7F2;
+  --surface-secondary: #F2EDE4;
+  --surface-hover: #ECE6DC;
 
   --black: #17191B;
   --dark-gray: #25292C;
   --gray: #596168;
-  --light-gray: #D7DCE0;
-  --border: #CDD2D6;
-  --border-light: #E2E6E9;
+  --light-gray: #DCD6CD;
+  --border: #17191B;
+  --border-light: #17191B;
 
   --steel: #60727D;
-  --industrial-blue: #315D72;
+  --industrial-blue: #17191B;
 
   --text: #17191B;
   --text-secondary: #25292C;
   --muted: #596168;
   --dim: #7B858C;
 
-  --accent: #315D72;
-  --accent-dim: rgba(49, 93, 114, 0.08);
+  --accent: #17191B;
+  --accent-dim: rgba(23, 25, 27, 0.08);
 
   --success: #477A5A;
   --success-dim: rgba(71, 122, 90, 0.08);
@@ -37,16 +37,16 @@
   --danger: #A94B4B;
   --danger-dim: rgba(169, 75, 75, 0.07);
 
-  --radius: 6px;
-  --radius-sm: 4px;
-  --radius-lg: 8px;
+  --radius: 0px;
+  --radius-sm: 0px;
+  --radius-lg: 0px;
 
   --sidebar-width: 220px;
-  --header-height: 52px;
+  --header-height: 60px;
 
-  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-heading: 'Space Grotesk', 'Inter', sans-serif;
-  --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+  --font: 'Roboto', Arial, sans-serif;
+  --font-heading: 'Roboto', Arial, sans-serif;
+  --font-mono: 'Roboto', Arial, monospace;
 }
 
 
@@ -448,8 +448,8 @@ a {
 
 .panel {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  border-radius: 0;
   padding: 20px;
   margin-bottom: 20px;
 }
@@ -559,15 +559,15 @@ a {
 
 .decision-card {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  border-radius: 0;
   padding: 22px 24px;
-  border-top: 2px solid var(--border);
+  border-top: 3px solid var(--border);
 }
 
 .decision-card-label {
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.12em;
   color: var(--steel);
   text-transform: uppercase;
@@ -577,22 +577,23 @@ a {
 .decision-card-value {
   font-family: var(--font-heading);
   font-size: 26px;
-  font-weight: 700;
+  font-weight: 900;
   letter-spacing: 0.04em;
   margin-bottom: 10px;
 }
 
 .decision-card-description {
   font-size: 13px;
-  color: var(--gray);
+  color: var(--text-secondary);
   line-height: 1.65;
+  font-weight: 500;
 }
 
 .decision--monitor .decision-card-value { color: var(--success); }
 .decision--attention .decision-card-value { color: var(--warning); }
 .decision--danger .decision-card-value { color: var(--danger); }
 
-/* Thin top-line accent instead of thick left border */
+/* Top-line accent */
 .decision--monitor { border-top-color: var(--success); }
 .decision--attention { border-top-color: var(--warning); }
 .decision--danger { border-top-color: var(--danger); }
@@ -604,8 +605,8 @@ a {
 
 .explainability-panel {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  border-radius: 0;
   padding: 22px 24px;
 }
 
@@ -703,8 +704,8 @@ a {
 
 .table-container {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  border-radius: 0;
   overflow-x: auto;
 }
 
@@ -718,18 +719,18 @@ a {
   text-align: left;
   padding: 11px 16px;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--steel);
-  border-bottom: 1px solid var(--border);
+  color: var(--black);
+  border-bottom: 1.5px solid var(--border);
   background: var(--surface-secondary);
   white-space: nowrap;
 }
 
 .data-table td {
   padding: 11px 16px;
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border);
   color: var(--text-secondary);
 }
 
@@ -796,9 +797,10 @@ a {
 .status-badge {
   display: inline-block;
   padding: 2px 8px;
-  border-radius: var(--radius-sm);
+  border-radius: 0;
+  border: 1px solid var(--border);
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.04em;
 }
 
@@ -820,9 +822,10 @@ a {
 .decision-badge {
   display: inline-block;
   padding: 2px 8px;
-  border-radius: var(--radius-sm);
+  border-radius: 0;
+  border: 1px solid var(--border);
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.08em;
   font-family: var(--font-mono);
 }
@@ -851,18 +854,19 @@ a {
 /* ---- Filter select ---- */
 .filter-select {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  border-radius: 0;
   color: var(--text);
   padding: 6px 12px;
   font-size: 13px;
+  font-weight: 600;
   font-family: var(--font);
   cursor: pointer;
   outline: none;
 }
 
 .filter-select:focus {
-  border-color: var(--industrial-blue);
+  border-color: #000000;
 }
 
 
@@ -1129,16 +1133,16 @@ a {
 
 .sensor-form-panel {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  border-radius: 0;
   padding: 22px 24px;
   margin-bottom: 20px;
 }
 
 .sensor-preview-panel {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  border-radius: 0;
   padding: 22px 24px;
   margin-bottom: 20px;
 }
@@ -1167,10 +1171,10 @@ a {
   justify-content: space-between;
   align-items: baseline;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--steel);
+  color: var(--black);
   margin-bottom: 6px;
 }
 
@@ -1179,7 +1183,7 @@ a {
   font-size: 10px;
   color: var(--dim);
   text-transform: none;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .form-input-wrapper {
@@ -1193,10 +1197,11 @@ a {
   width: 100%;
   height: 38px;
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  border-radius: 0;
   color: var(--text);
   font-size: 13px;
+  font-weight: 600;
   font-family: var(--font);
   padding: 8px 12px;
   outline: none;
@@ -1212,15 +1217,15 @@ a {
   right: 12px;
   font-size: 11px;
   font-family: var(--font-mono);
-  font-weight: 500;
-  color: var(--dim);
+  font-weight: 700;
+  color: var(--black);
   pointer-events: none;
 }
 
 .form-input:focus,
 .form-select:focus {
-  border-color: var(--industrial-blue);
-  box-shadow: 0 0 0 2px var(--accent-dim);
+  border-color: #000000;
+  box-shadow: 0 0 0 1px #000000;
 }
 
 .form-input--error,
@@ -1236,7 +1241,7 @@ a {
   font-size: 11px;
   color: var(--danger);
   margin-top: 5px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .form-actions {
@@ -1245,7 +1250,7 @@ a {
   justify-content: flex-end;
   gap: 12px;
   padding-top: 14px;
-  border-top: 1px solid var(--border-light);
+  border-top: 1.5px solid var(--border);
 }
 
 .btn {
@@ -1256,40 +1261,40 @@ a {
   height: 36px;
   padding: 0 18px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.04em;
   font-family: var(--font);
-  border-radius: var(--radius-sm);
+  border-radius: 0;
   cursor: pointer;
   transition: all 0.15s ease;
   white-space: nowrap;
 }
 
 .btn-primary {
-  background: var(--industrial-blue);
-  border: 1px solid var(--industrial-blue);
-  color: #FFFFFF;
+  background: #17191B;
+  border: 1.5px solid #17191B;
+  color: #FAF7F2;
 }
 
 .btn-primary:hover {
-  background: #25495b;
-  border-color: #25495b;
+  background: #333333;
+  border-color: #333333;
 }
 
 .btn-secondary {
   background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--dark-gray);
+  border: 1.5px solid var(--border);
+  color: var(--black);
 }
 
 .btn-secondary:hover {
   background: var(--surface-secondary);
-  border-color: var(--steel);
+  border-color: var(--black);
 }
 
 .btn-subtle {
   background: transparent;
-  border: 1px solid transparent;
+  border: 1.5px solid transparent;
   color: var(--muted);
   height: 28px;
   padding: 0 10px;
@@ -1303,11 +1308,11 @@ a {
 
 .btn-inline-now {
   background: var(--surface-secondary);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  color: var(--steel);
+  border: 1.5px solid var(--border);
+  border-radius: 0;
+  color: var(--black);
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.04em;
   padding: 2px 7px;
   cursor: pointer;
@@ -1316,8 +1321,8 @@ a {
 }
 
 .btn-inline-now:hover {
-  background: var(--border);
-  color: var(--black);
+  background: #17191B;
+  color: #FAF7F2;
 }
 
 .btn-inline-link {
@@ -1606,8 +1611,8 @@ a {
   justify-content: space-between;
   align-items: center;
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  border-radius: 0;
   padding: 14px 20px;
   margin-bottom: 20px;
   flex-wrap: wrap;
@@ -1622,15 +1627,15 @@ a {
 
 .machine-info-id {
   font-family: var(--font-heading);
-  font-size: 17px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 900;
   color: var(--black);
 }
 
 .machine-info-name {
   font-size: 13px;
-  color: var(--steel);
-  font-weight: 500;
+  color: var(--black);
+  font-weight: 600;
 }
 
 .machine-info-meta {
@@ -1644,6 +1649,75 @@ a {
 
 .machine-info-meta strong {
   color: var(--dark-gray);
+}
+
+.machine-info-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Instruction Card */
+.instruction-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 0;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+
+.instruction-header {
+  margin-bottom: 14px;
+}
+
+.instruction-title {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 4px;
+}
+
+.instruction-subtitle {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.instruction-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.instruction-step {
+  background: var(--surface-secondary);
+  border: 1.5px solid var(--border);
+  border-radius: 0;
+  padding: 12px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--dark-gray);
+}
+
+.instruction-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 0;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--black);
+  font-weight: 700;
+  font-size: 11px;
+  flex-shrink: 0;
+  margin-top: 1px;
 }
 
 /* Decision Pending & Baseline Evaluation Table */
@@ -1665,10 +1739,10 @@ a {
 
 .baseline-table th {
   text-align: left;
-  color: var(--steel);
+  color: var(--black);
   padding: 6px 8px;
-  border-bottom: 1px solid var(--border-light);
-  font-weight: 600;
+  border-bottom: 1.5px solid var(--border);
+  font-weight: 700;
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -1676,7 +1750,7 @@ a {
 
 .baseline-table td {
   padding: 6px 8px;
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border);
   color: var(--text-secondary);
 }
 
@@ -1718,4 +1792,59 @@ a {
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
+
+/* Quick Telemetry Presets Toolbar */
+.telemetry-presets-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+  background-color: var(--surface-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+}
+
+.telemetry-presets-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--steel);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.telemetry-presets-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-preset {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 13px;
+  background-color: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--black);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.btn-preset:hover {
+  background-color: #17191B;
+  border-color: #17191B;
+  color: #FAF7F2;
+}
+
 

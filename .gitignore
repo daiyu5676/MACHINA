@@ -17,6 +17,13 @@ __pycache__/
 # Environment variables
 .env
 .env.*
+*.env
+**/.env
+**/.env.*
+gateway/.env
+gateway/.env.*
+frontend/.env
+frontend/.env.*
 
 # =========================
 # Node / React

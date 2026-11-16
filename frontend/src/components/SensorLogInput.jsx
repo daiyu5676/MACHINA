@@ -41,15 +41,37 @@ function formatTime(isoString) {
   );
 }
 
-function SensorLogInput() {
+function SensorLogInput({
+  showPreview = false,
+  onSuccess,
+  onCancel,
+  defaultMachineId
+}) {
   const { machines, addSensorLog, clearMachines } = useMachines();
 
   // Mode: "NEW" (typing brand new machine) or existing machine ID
-  const [selectedMode, setSelectedMode] = useState("NEW");
+  const [selectedMode, setSelectedMode] = useState(() => {
+    if (defaultMachineId && machines.some((m) => m.id === defaultMachineId)) {
+      return defaultMachineId;
+    }
+    return machines.length > 0 ? machines[0].id : "NEW";
+  });
 
   // Form field states
-  const [machineId, setMachineId] = useState("");
-  const [machineName, setMachineName] = useState("");
+  const [machineId, setMachineId] = useState(() => {
+    if (defaultMachineId) {
+      const match = machines.find((m) => m.id === defaultMachineId);
+      if (match) return match.id;
+    }
+    return machines.length > 0 ? machines[0].id : "";
+  });
+  const [machineName, setMachineName] = useState(() => {
+    if (defaultMachineId) {
+      const match = machines.find((m) => m.id === defaultMachineId);
+      if (match) return match.name;
+    }
+    return machines.length > 0 ? machines[0].name : "";
+  });
   const [vibration, setVibration] = useState("");
   const [temperature, setTemperature] = useState("");
   const [load, setLoad] = useState("");
@@ -213,6 +235,49 @@ function SensorLogInput() {
     setRpm("");
     setTimestamp(getLocalDateTimeString());
     setErrors({});
+
+    if (onSuccess) {
+      onSuccess(effectiveId);
+    }
+  };
+
+  const applyPreset = (presetType) => {
+    if (selectedMode === "NEW" && !machineId.trim()) {
+      setMachineId("TURBINE-01");
+      setMachineName("Gas Turbine Main");
+      clearError("machineId");
+    }
+
+    if (presetType === "NOMINAL") {
+      setVibration("0.06");
+      setTemperature("52.0");
+      setLoad("45.0");
+      setRpm("1480");
+    } else if (presetType === "ELEVATED") {
+      setVibration("0.18");
+      setTemperature("66.0");
+      setLoad("72.0");
+      setRpm("1720");
+    } else if (presetType === "CRITICAL") {
+      setVibration("0.38");
+      setTemperature("86.5");
+      setLoad("85.0");
+      setRpm("1860");
+    } else if (presetType === "RANDOM") {
+      const randomVib = (0.05 + Math.random() * 0.35).toFixed(2);
+      const randomTemp = (48.0 + Math.random() * 40.0).toFixed(1);
+      const randomLoad = (30.0 + Math.random() * 60.0).toFixed(1);
+      const randomRpm = Math.floor(1450 + Math.random() * 550);
+      setVibration(String(randomVib));
+      setTemperature(String(randomTemp));
+      setLoad(String(randomLoad));
+      setRpm(String(randomRpm));
+    }
+
+    clearError("vibration");
+    clearError("temperature");
+    clearError("load");
+    clearError("rpm");
   };
 
   const handleReset = () => {
@@ -276,9 +341,6 @@ function SensorLogInput() {
         {successNotification && (
           <div className="success-banner" role="status">
             <div className="success-banner-content">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
               <span>
                 {successNotification.isExisting ? (
                   <>
@@ -303,6 +365,47 @@ function SensorLogInput() {
             </button>
           </div>
         )}
+
+        {/* Quick Telemetry Presets Toolbar for Demos */}
+        <div className="telemetry-presets-bar">
+          <span className="telemetry-presets-label">
+            Demo Presets:
+          </span>
+          <div className="telemetry-presets-buttons">
+            <button
+              type="button"
+              className="btn-preset btn-preset--nominal"
+              onClick={() => applyPreset("NOMINAL")}
+              title="Populate normal healthy operational telemetry (MONITOR)"
+            >
+              Nominal (Healthy)
+            </button>
+            <button
+              type="button"
+              className="btn-preset btn-preset--elevated"
+              onClick={() => applyPreset("ELEVATED")}
+              title="Populate elevated vibration telemetry (REPAIR)"
+            >
+              Elevated Fault (Repair)
+            </button>
+            <button
+              type="button"
+              className="btn-preset btn-preset--critical"
+              onClick={() => applyPreset("CRITICAL")}
+              title="Populate critical bearing failure telemetry (REPLACE)"
+            >
+              Critical Failure (Replace)
+            </button>
+            <button
+              type="button"
+              className="btn-preset btn-preset--random"
+              onClick={() => applyPreset("RANDOM")}
+              title="Generate realistic randomized telemetry values"
+            >
+              Randomize
+            </button>
+          </div>
+        </div>
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="sensor-form-grid">
@@ -331,7 +434,6 @@ function SensorLogInput() {
                   id="sensor-machine-id"
                   type="text"
                   className={`form-input ${errors.machineId ? "form-input--error" : ""}`}
-                  placeholder="e.g. TURBINE-001 or PUMP-101"
                   value={machineId}
                   onChange={(e) => {
                     setMachineId(e.target.value.toUpperCase());
@@ -342,14 +444,7 @@ function SensorLogInput() {
               </div>
 
               {errors.machineId && (
-                <p className="form-error">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                  </svg>
-                  {errors.machineId}
-                </p>
+                <p className="form-error">{errors.machineId}</p>
               )}
             </div>
 
@@ -364,7 +459,6 @@ function SensorLogInput() {
                   id="sensor-machine-name"
                   type="text"
                   className="form-input"
-                  placeholder="e.g. Centrifugal Feedwater Pump"
                   value={machineName}
                   onChange={handleFieldChange(setMachineName, "machineName")}
                 />
@@ -385,21 +479,13 @@ function SensorLogInput() {
                   min="0"
                   max="100"
                   className={`form-input form-input--has-unit ${errors.vibration ? "form-input--error" : ""}`}
-                  placeholder="e.g. 0.45"
                   value={vibration}
                   onChange={handleFieldChange(setVibration, "vibration")}
                 />
                 <span className="form-input-unit-badge">mm/s</span>
               </div>
               {errors.vibration && (
-                <p className="form-error">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                  </svg>
-                  {errors.vibration}
-                </p>
+                <p className="form-error">{errors.vibration}</p>
               )}
             </div>
 
@@ -415,21 +501,13 @@ function SensorLogInput() {
                   type="number"
                   step="0.1"
                   className={`form-input form-input--has-unit ${errors.temperature ? "form-input--error" : ""}`}
-                  placeholder="e.g. 74.5"
                   value={temperature}
                   onChange={handleFieldChange(setTemperature, "temperature")}
                 />
                 <span className="form-input-unit-badge">°C</span>
               </div>
               {errors.temperature && (
-                <p className="form-error">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                  </svg>
-                  {errors.temperature}
-                </p>
+                <p className="form-error">{errors.temperature}</p>
               )}
             </div>
 
@@ -447,21 +525,13 @@ function SensorLogInput() {
                   min="0"
                   max="100"
                   className={`form-input form-input--has-unit ${errors.load ? "form-input--error" : ""}`}
-                  placeholder="e.g. 65.0"
                   value={load}
                   onChange={handleFieldChange(setLoad, "load")}
                 />
                 <span className="form-input-unit-badge">%</span>
               </div>
               {errors.load && (
-                <p className="form-error">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                  </svg>
-                  {errors.load}
-                </p>
+                <p className="form-error">{errors.load}</p>
               )}
             </div>
 
@@ -478,21 +548,13 @@ function SensorLogInput() {
                   step="1"
                   min="0"
                   className={`form-input form-input--has-unit ${errors.rpm ? "form-input--error" : ""}`}
-                  placeholder="e.g. 1650"
                   value={rpm}
                   onChange={handleFieldChange(setRpm, "rpm")}
                 />
                 <span className="form-input-unit-badge">RPM</span>
               </div>
               {errors.rpm && (
-                <p className="form-error">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                  </svg>
-                  {errors.rpm}
-                </p>
+                <p className="form-error">{errors.rpm}</p>
               )}
             </div>
 
@@ -522,20 +584,22 @@ function SensorLogInput() {
                 />
               </div>
               {errors.timestamp && (
-                <p className="form-error">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                  </svg>
-                  {errors.timestamp}
-                </p>
+                <p className="form-error">{errors.timestamp}</p>
               )}
             </div>
           </div>
 
           {/* Form Actions */}
           <div className="form-actions">
+            {onCancel && (
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={onCancel}
+              >
+                Back to Active Machine
+              </button>
+            )}
             <button
               type="button"
               className="btn btn-secondary"
@@ -547,78 +611,77 @@ function SensorLogInput() {
               type="submit"
               className="btn btn-primary"
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
               {selectedMode === "NEW" ? "Register Machine & Submit Log" : "Append Sensor Reading"}
             </button>
           </div>
         </form>
       </div>
 
-      {/* Sensor Log Preview Table Panel */}
-      <div className="panel sensor-preview-panel">
-        <div className="panel-header-row">
-          <div>
-            <h3 className="panel-title">Session Telemetry Log Stream</h3>
-            <p className="panel-subtitle">
-              All submitted sensor readings ({allLogs.length} {allLogs.length === 1 ? "entry" : "entries"} across {machines.length} registered {machines.length === 1 ? "machine" : "machines"})
-            </p>
-          </div>
-          {machines.length > 0 && (
-            <button
-              type="button"
-              className="btn btn-subtle"
-              onClick={clearMachines}
-              title="Clear all registered dynamic machines and session logs"
-            >
-              Clear Session Telemetry
-            </button>
-          )}
-        </div>
-
-        <div className="table-container">
-          {allLogs.length === 0 ? (
-            <div className="table-empty">
-              <p>No sensor logs recorded yet. Use the form above to enter the first machine readings.</p>
+      {/* Sensor Log Preview Table Panel (Optional preview) */}
+      {showPreview && (
+        <div className="panel sensor-preview-panel">
+          <div className="panel-header-row">
+            <div>
+              <h3 className="panel-title">Session Telemetry Log Stream</h3>
+              <p className="panel-subtitle">
+                All submitted sensor readings ({allLogs.length} {allLogs.length === 1 ? "entry" : "entries"} across {machines.length} registered {machines.length === 1 ? "machine" : "machines"})
+              </p>
             </div>
-          ) : (
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Machine ID</th>
-                  <th>Machine Name</th>
-                  <th>Vibration (mm/s)</th>
-                  <th>Temperature (°C)</th>
-                  <th>Load (%)</th>
-                  <th>RPM</th>
-                  <th>Timestamp</th>
-                </tr>
-              </thead>
-              <tbody>
-                {allLogs.map((log, index) => (
-                  <tr key={log.id} className={index === 0 ? "row-highlight-new" : ""}>
-                    <td>
-                      <div className="asset-cell">
-                        <span className="asset-cell-id font-bold">
-                          {log.machineId}
-                          {index === 0 && <span className="badge-new">LATEST</span>}
-                        </span>
-                      </div>
-                    </td>
-                    <td>{log.machineName}</td>
-                    <td className="font-mono">{log.vibration}</td>
-                    <td className="font-mono">{log.temperature}°C</td>
-                    <td className="font-mono">{log.load}%</td>
-                    <td className="font-mono">{log.rpm}</td>
-                    <td className="text-muted">{formatTime(log.timestamp)}</td>
+            {machines.length > 0 && (
+              <button
+                type="button"
+                className="btn btn-subtle"
+                onClick={clearMachines}
+                title="Clear all registered dynamic machines and session logs"
+              >
+                Clear Session Telemetry
+              </button>
+            )}
+          </div>
+
+          <div className="table-container">
+            {allLogs.length === 0 ? (
+              <div className="table-empty">
+                <p>No sensor logs recorded yet. Use the form above to enter the first machine readings.</p>
+              </div>
+            ) : (
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>Machine ID</th>
+                    <th>Machine Name</th>
+                    <th>Vibration (mm/s)</th>
+                    <th>Temperature (°C)</th>
+                    <th>Load (%)</th>
+                    <th>RPM</th>
+                    <th>Timestamp</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+                </thead>
+                <tbody>
+                  {allLogs.map((log, index) => (
+                    <tr key={log.id} className={index === 0 ? "row-highlight-new" : ""}>
+                      <td>
+                        <div className="asset-cell">
+                          <span className="asset-cell-id font-bold">
+                            {log.machineId}
+                            {index === 0 && <span className="badge-new">LATEST</span>}
+                          </span>
+                        </div>
+                      </td>
+                      <td>{log.machineName}</td>
+                      <td className="font-mono">{log.vibration}</td>
+                      <td className="font-mono">{log.temperature}°C</td>
+                      <td className="font-mono">{log.load}%</td>
+                      <td className="font-mono">{log.rpm}</td>
+                      <td className="text-muted">{formatTime(log.timestamp)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

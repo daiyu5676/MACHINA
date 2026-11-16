@@ -116,6 +116,8 @@ export function MachineProvider({ children }) {
             healthScore: null,
             failureProbability: null,
             decision: null,
+            strategy: null,
+            reason: null,
             explanation: null,
             analyzedAt: null,
             errorMessage: null
@@ -146,6 +148,8 @@ export function MachineProvider({ children }) {
             healthScore: null,
             failureProbability: null,
             decision: null,
+            strategy: null,
+            reason: null,
             explanation: null,
             analyzedAt: null,
             errorMessage: null
@@ -192,6 +196,7 @@ export function MachineProvider({ children }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          asset_id: target.id,
           temperature: target.readings.temperature,
           vibration: target.readings.vibration,
           rpm: target.readings.rpm,
@@ -208,6 +213,7 @@ export function MachineProvider({ children }) {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            asset_id: target.id,
             temperature: target.readings.temperature,
             vibration: target.readings.vibration,
             rpm: target.readings.rpm,
@@ -222,7 +228,11 @@ export function MachineProvider({ children }) {
       }
 
       const score = predData.health_score;
-      const decision = score < 40 ? "REPLACE" : score < 70 ? "REPAIR" : "MONITOR";
+      // Real deterministic decision, strategy, and rationale from Java Decision Engine
+      const decision = predData.decision || (score < 40 ? "REPLACE" : score < 70 ? "REPAIR" : "MONITOR");
+      const strategy = predData.strategy || "StandardScoringStrategy";
+      const reason = predData.reason || null;
+      const explanation = explainData?.features || predData.explanation?.features || null;
 
       setMachines((prev) =>
         prev.map((m) =>
@@ -234,7 +244,9 @@ export function MachineProvider({ children }) {
                   healthScore: score,
                   failureProbability: predData.failure_probability,
                   decision: decision,
-                  explanation: explainData?.features || null,
+                  strategy: strategy,
+                  reason: reason,
+                  explanation: explanation,
                   analyzedAt: new Date().toISOString(),
                   errorMessage: null
                 }

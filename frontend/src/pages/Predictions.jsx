@@ -65,7 +65,7 @@ function Predictions() {
       <div className="page-header">
         <div>
           <h2 className="page-title">Predictions & Inference</h2>
-          <p className="page-subtitle">Telemetry prediction records for dynamic fleet</p>
+          <p className="page-subtitle">Historical machine predictions</p>
         </div>
 
         {machines.length > 0 && (

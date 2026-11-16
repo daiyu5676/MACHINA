@@ -11,13 +11,13 @@ function AssetSelector({ assets, selectedId, onSelect }) {
   };
 
   return (
-    <div className="flex justify-between items-center bg-white border border-[#CDD2D6] rounded-[6px] px-[18px] py-3 mb-5 max-md:flex-col max-md:items-start max-md:gap-2.5">
+    <div className="flex justify-between items-center bg-[#FAF7F2] border-[1.5px] border-[#17191B] px-[18px] py-3 mb-5 max-md:flex-col max-md:items-start max-md:gap-2.5">
       <div className="flex items-center gap-[14px]">
-        <span className="text-[10px] font-semibold tracking-[0.12em] text-[#60727D] uppercase">
+        <span className="text-[10px] font-bold tracking-[0.12em] text-[#60727D] uppercase">
           ASSET
         </span>
         <select
-          className="bg-[#F5F6F7] border border-[#CDD2D6] rounded text-[#17191B] px-3 py-1.5 text-[13px] font-medium cursor-pointer outline-none focus:border-[#315D72]"
+          className="bg-[#FAF7F2] border-[1.5px] border-[#17191B] text-[#17191B] px-3 py-1.5 text-[13px] font-semibold cursor-pointer outline-none"
           value={selectedId}
           onChange={(e) => onSelect(e.target.value)}
         >
@@ -31,7 +31,7 @@ function AssetSelector({ assets, selectedId, onSelect }) {
 
       {selected && (
         <div>
-          <span className="text-xs text-[#7B858C] font-mono font-normal tracking-[-0.01em]">
+          <span className="text-xs text-[#7B858C] font-mono font-medium tracking-[-0.01em]">
             Last Analysis {formatTime(selected.lastAnalysis)}
           </span>
         </div>

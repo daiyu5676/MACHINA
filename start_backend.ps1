@@ -35,7 +35,7 @@ Pop-Location
 
 # 1. Start Java Decision Engine
 Write-Host "[1/3] Starting Java Decision Engine on port 8080..." -ForegroundColor Yellow
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$PSScriptRoot\java-decision-engine'; Write-Host '--- JAVA DECISION ENGINE (Port 8080) ---' -ForegroundColor Cyan; & '$javaExe' -Djava.net.preferIPv4Stack=true -cp bin Server"
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$PSScriptRoot\java-decision-engine'; Write-Host '--- JAVA DECISION ENGINE (Port 8080) ---' -ForegroundColor Cyan; & '$javaExe' -cp bin Server"
 Start-Sleep -Seconds 2
 
 # 2. Start Python ML Service (uses venv if available)

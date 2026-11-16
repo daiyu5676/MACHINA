@@ -57,6 +57,17 @@ function formatTime(isoString) {
   );
 }
 
+function formatOnlyTime(isoString) {
+  if (!isoString) return "--:--";
+  const d = new Date(isoString);
+  if (isNaN(d.getTime())) return isoString;
+  return d.toLocaleTimeString("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  });
+}
+
 function formatDate(isoString) {
   if (!isoString) return "--";
   const d = new Date(isoString);
@@ -281,7 +292,7 @@ function Dashboard() {
                 <MetricCard
                   title="Telemetry Stream"
                   value={`${selectedMachine.history.length} Ingested`}
-                  subtitle={`Latest: ${formatTime(selectedMachine.readings.timestamp).split(" ")[1]}`}
+                  subtitle={`Latest: ${formatOnlyTime(selectedMachine.readings.timestamp)}`}
                   status="healthy"
                 />
               </div>

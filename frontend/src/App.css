@@ -312,9 +312,9 @@ a {
    ============================================================ */
 
 .section-label {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--steel);
   margin-bottom: 14px;
@@ -326,9 +326,10 @@ a {
 }
 
 .section-label .section-number {
-  color: var(--dim);
+  color: var(--steel);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 
@@ -398,19 +399,24 @@ a {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .metric-card {
   background: var(--surface);
-  padding: 16px 18px;
+  padding: 26px 24px;
+  min-height: 155px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
   border-left: none;
 }
 
 .metric-card-title {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
   color: var(--steel);
   text-transform: uppercase;
   margin-bottom: 8px;
@@ -418,7 +424,7 @@ a {
 
 .metric-card-value {
   font-family: var(--font-heading);
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 700;
   color: var(--black);
   margin-bottom: 3px;
@@ -426,7 +432,7 @@ a {
 }
 
 .metric-card-subtitle {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--dim);
   font-weight: 500;
 }
@@ -450,24 +456,24 @@ a {
   background: var(--surface);
   border: 1.5px solid var(--border);
   border-radius: 0;
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
 }
 
 .panel-title {
   font-family: var(--font-heading);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
-  letter-spacing: 0.04em;
-  margin-bottom: 14px;
+  letter-spacing: 0.02em;
+  margin-bottom: 6px;
   color: var(--dark-gray);
 }
 
 .panel-subtitle {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--dim);
-  margin-top: -8px;
-  margin-bottom: 14px;
+  margin-top: 0;
+  margin-bottom: 16px;
 }
 
 
@@ -487,13 +493,18 @@ a {
 
 .sensor-card {
   background: var(--surface);
-  padding: 14px 16px;
+  padding: 24px 24px;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
 }
 
 .sensor-card-label {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
   color: var(--steel);
   text-transform: uppercase;
   margin-bottom: 8px;
@@ -501,22 +512,25 @@ a {
 
 .sensor-card-value {
   font-family: var(--font-mono);
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 600;
   color: var(--black);
   letter-spacing: -0.02em;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
 }
 
 .sensor-card-unit {
   font-family: var(--font);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
-  color: var(--dim);
+  color: var(--steel);
 }
 
 .sensor-card-trend {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   margin-top: 6px;
   letter-spacing: 0;
@@ -1627,28 +1641,29 @@ a {
 
 .machine-info-id {
   font-family: var(--font-heading);
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 900;
   color: var(--black);
 }
 
 .machine-info-name {
-  font-size: 13px;
+  font-size: 16px;
   color: var(--black);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .machine-info-meta {
   display: flex;
   align-items: center;
-  gap: 18px;
-  font-size: 11px;
-  font-family: var(--font-mono);
-  color: var(--dim);
+  gap: 20px;
+  font-size: 13px;
+  color: var(--muted);
 }
 
 .machine-info-meta strong {
-  color: var(--dark-gray);
+  color: var(--black);
+  font-family: var(--font-mono);
+  font-weight: 600;
 }
 
 .machine-info-actions {
@@ -1727,31 +1742,33 @@ a {
 
 .decision--pending .decision-card-value {
   color: var(--steel);
-  font-size: 20px;
+  font-size: 22px;
 }
 
 .baseline-table {
   width: 100%;
   margin-top: 14px;
   border-collapse: collapse;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .baseline-table th {
   text-align: left;
   color: var(--black);
-  padding: 6px 8px;
+  padding: 10px 12px;
   border-bottom: 1.5px solid var(--border);
   font-weight: 700;
-  font-size: 10px;
+  font-size: 12px;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 
 .baseline-table td {
-  padding: 6px 8px;
+  padding: 10px 12px;
   border-bottom: 1px solid var(--border);
   color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
 }
 
 /* Analysis Pending Placeholder in Explainability */
@@ -1766,7 +1783,7 @@ a {
 
 .analysis-pending-title {
   font-weight: 600;
-  font-size: 13px;
+  font-size: 15px;
   color: var(--dark-gray);
   margin-top: 6px;
 }

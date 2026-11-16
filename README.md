@@ -26,7 +26,7 @@ MACHINA operates as a distributed microservice architecture designed for real-ti
          ┌───────────────────┐  ┌─────────────┐ ┌────────────────┐
          │ Python ML Service │  │ Java Engine │ │ MongoDB        │
          │ (FastAPI / 8000)  │  │ (Java 17 /  │ │ (Database:     │
-         │ - Random Forest   │  │   Port 8080)│ │  'machina')   │
+         │ - Random Forest   │  │   Port 8080)│ │  'machina')    │
          │ - SHAP Explainer  │  │ - 4 GoF OOP │ │ - Assets       │
          │ - NASA IMS Model  │  │   Patterns  │ │ - SensorLogs   │
          └───────────────────┘  └─────────────┘ │ - Predictions  │

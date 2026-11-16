@@ -11,16 +11,18 @@ function SensorCard({ label, value, unit, change }) {
   }
 
   return (
-    <div className="bg-white p-3.5 sm:p-[14px_16px]">
-      <p className="text-[10px] font-semibold tracking-[0.1em] text-[#60727D] uppercase mb-2 m-0">
-        {label}
-      </p>
-      <p className="font-mono text-[22px] font-semibold text-[#17191B] tracking-[-0.02em] m-0">
-        {value}
-        {unit && <span className="font-sans text-xs font-medium text-[#7B858C]"> {unit}</span>}
-      </p>
+    <div className="sensor-card bg-white p-6 sm:p-7 min-h-[140px] flex flex-col justify-between transition-all">
+      <div>
+        <p className="text-xs font-semibold tracking-[0.06em] text-[#596168] uppercase mb-2.5 m-0">
+          {label}
+        </p>
+        <p className="font-mono text-[26px] font-semibold text-[#17191B] tracking-[-0.02em] m-0 flex items-baseline gap-1.5">
+          {value}
+          {unit && <span className="font-sans text-[14px] font-medium text-[#596168]">{unit}</span>}
+        </p>
+      </div>
       {change !== undefined && (
-        <p className={`font-mono text-[11px] font-medium mt-1.5 tracking-normal m-0 ${trendColor}`}>
+        <p className={`font-mono text-[12px] font-medium pt-2 tracking-normal m-0 ${trendColor}`}>
           {trendSymbol} {Math.abs(change).toFixed(1)}%
         </p>
       )}

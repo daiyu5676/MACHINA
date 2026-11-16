@@ -1,11 +1,13 @@
 function MetricCard({ title, value, subtitle, status }) {
   const statusBorder =
     status === "healthy"
-      ? "shadow-[inset_0_2px_0_#477A5A]"
+      ? "shadow-[inset_0_3px_0_#477A5A]"
       : status === "attention"
-      ? "shadow-[inset_0_2px_0_#A87532]"
+      ? "shadow-[inset_0_3px_0_#A87532]"
       : status === "danger"
-      ? "shadow-[inset_0_2px_0_#A94B4B]"
+      ? "shadow-[inset_0_3px_0_#A94B4B]"
+      : status === "pending"
+      ? "shadow-[inset_0_3px_0_#60727D]"
       : "";
 
   const statusText =
@@ -15,18 +17,20 @@ function MetricCard({ title, value, subtitle, status }) {
       ? "text-[#A87532]"
       : status === "danger"
       ? "text-[#A94B4B]"
-      : "text-[#7B858C]";
+      : "text-[#596168]";
 
   return (
-    <div className={`bg-white p-4 sm:p-[16px_18px] transition-colors ${statusBorder}`}>
-      <p className="text-[10px] font-semibold tracking-[0.1em] text-[#60727D] uppercase mb-2 m-0">
-        {title}
-      </p>
-      <p className="font-heading text-[22px] font-bold text-[#17191B] mb-[3px] tracking-[-0.01em] m-0">
-        {value}
-      </p>
+    <div className={`metric-card bg-white p-6 sm:p-7 min-h-[155px] flex flex-col justify-between transition-all ${statusBorder}`}>
+      <div>
+        <p className="text-xs font-semibold tracking-[0.06em] text-[#596168] uppercase mb-2.5 m-0">
+          {title}
+        </p>
+        <p className="font-heading text-[26px] font-bold text-[#17191B] mb-1 tracking-[-0.01em] m-0">
+          {value}
+        </p>
+      </div>
       {subtitle && (
-        <p className={`text-xs font-medium m-0 ${statusText}`}>
+        <p className={`text-[13px] font-medium m-0 pt-2 ${statusText}`}>
           {subtitle}
         </p>
       )}

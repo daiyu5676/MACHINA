@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "seed": "node scripts/seed.js",
+    "migrate:atlas": "node scripts/migrate_to_atlas.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
